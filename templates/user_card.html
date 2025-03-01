@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin: 10%;margin-top: 1%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px;">
+    <style>
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-item img {
+            max-width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-control a {
+            margin: 0 5px;
+        }
+    </style>
+    <div class="container">
+        <h1>Ваша корзина</h1>
+        <div class="cart-items">
+            {% for card_entry_data in card_entries_data %}
+            <div class="cart-item">
+                <div>
+                    <img src="/{{ card_entry_data['profile_img_path'] }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Image" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
+                    <a href="/product/{{ card_entry_data['product_id'] }}">
+                        <span>{{ card_entry_data["product_name"] }}</span>
+                    </a>
+                </div>
+                <div class="quantity-control">
+                    <a class="btn btn-sm btn-secondary" href="/remove_from_user_card/{{ card_entry_data['product_id'] }}">-</a>
+                    <span class="quantity">{{ card_entry_data["count"] }}</span>
+                    <a class="btn btn-sm btn-secondary" href="/add_to_user_card/{{ card_entry_data['product_id'] }}">+</a>
+                </div>
+                <span class="item-price">Стоимость: {{ card_entry_data["total_price"] }} у.е.</span>
+            </div>
+            {% else %}
+            <p>Ваша корзина пуста.</p>
+            {% endfor %}
+        </div>
+        <div class="total">
+            {% if total_card_price %}
+            <h2>Общая стоимость: {{ total_card_price }} у.е.</h2>
+            <a class="btn btn-success btn-lg" href="/do_order">Заказать</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin: 10%;margin-top: 1%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px;">
+    <h2 style="text-align: center;">Добавление товара</h2>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <ul class="list-group">
+            <li class="list-group-item">
+                <h5>{{ form.name.label }}</h5>
+                <p>
+                    {{ form.name(class="form-control") }}<br>
+                    {% for error in form.name.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+                <h5>{{ form.category.label }}</h5>
+                <p>
+                    {{ form.category(class="form-control") }}<br>
+                    {% for error in form.category.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+                <h5>{{ form.long_description.label }}</h5>
+                <p>
+                    {{ form.long_description(class="form-control") }}<br>
+                    {% for error in form.long_description.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+                <h5>{{ form.short_description.label }}</h5>
+                <p>
+                    {{ form.short_description(class="form-control") }}<br>
+                    {% for error in form.short_description.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+                <h5>{{ form.specifications.label }}</h5>
+                <p>
+                    {{ form.specifications(class="form-control") }}<br>
+                    {% for error in form.specifications.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+                <h5>{{ form.price.label }}</h5>
+                <p>
+                    {{ form.price(class="form-control") }}<br>
+                    {% for error in form.price.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+                <h5>{{ form.promo.label }}</h5>
+                <p>
+                    {{ form.promo(class="form-control") }}<br>
+                    {% for error in form.promo.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+            </li>
+            <li class="list-group-item">
+                <h5>{{ form.profile_img.label }}</h5>
+                <p>
+                    {{ form.profile_img(class="form-control") }}
+                    {% for error in form.profile_img.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+            </li>
+        </ul>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", style="width: 49.5%; margin-top: 1.5%; float: left;") }}
+        <a class="btn btn-outline-success" href="/profile/{{ current_user.id }}" style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
+        {{message}}
+    </form>
+</div>
+{% endblock %}

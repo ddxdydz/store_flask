@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin: auto;margin-top: 3%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px; max-width: 600px">
+    <div class="container">
+        <h1>Ваши заказы</h1><br>
+        <div class="order-items">
+            <ul>
+            {% for order in orders %}
+            <li>
+                <a href="/order_description/{{ order.id }}">
+                    Заказ от {{ order.time.strftime("%Y-%m-%d %H:%M") }}
+                </a>
+            </li>
+            {% else %}
+            <li>У вас нет заказов.</li>
+            {% endfor %}
+            </ul>
+        </div>
+        <a class="btn btn-outline-success" href="/user_page" style="width: 100%; margin-top: 1.5%; margin-left: 1%;">Назад</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin: auto;margin-top: 3%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px;max-width: 800px">
+    <h2 style="text-align: center;">Изменение профиля:  {{ user.name }}</h2>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <ul class="list-group">
+            <li class="list-group-item">
+                <h5>{{ form.name.label }}</h5>
+                <p>
+                    {{ form.name(class="form-control") }}<br>
+                    {% for error in form.name.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+            </li>
+            <li class="list-group-item">
+                <h5>{{ form.profile_img.label }}</h5>
+                <p>
+                    {{ form.profile_img(class="form-control") }}
+                    {% for error in form.profile_img.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+                <p>{{ form.delete_img() }} {{ form.delete_img.label }}</p>
+            </li>
+            <li class="list-group-item">
+                <h5>{{ form.about.label }}</h5>
+                <p>
+                    {{ form.about(class="form-control") }}<br>
+                    {% for error in form.about.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+            </li>
+        </ul>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", style="width: 49.5%; margin-top: 1.5%; float: left;") }}
+        <a class="btn btn-outline-success" href="/profile/{{ current_user.id }}" style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
+    </form>
+</div>
+{% endblock %}

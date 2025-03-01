@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin: auto;margin-top: 3%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px; max-width: 600px">
+    <h2 style="text-align: center;">Изменение роли:  {{ user.name }}</h2>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <br>
+        <h5>{{ form.admin_key.label }}</h5>
+        <p>
+            {{ form.admin_key(class="form-control") }}
+            {% for error in form.admin_key.errors %}
+            <p class="alert alert-danger" role="alert">{{ error }}</p>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", style="width: 49.5%; margin-top: 1.5%; float: left;") }}
+        <a class="btn btn-outline-success" href="/profile/{{ current_user.id }}" style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
+        {{message}}
+    </form>
+</div>
+{% endblock %}

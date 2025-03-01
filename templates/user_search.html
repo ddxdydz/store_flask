@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="margin: 10%;margin-top: 1%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px;">
+    <h2 style="text-align: center;">Пользователи</h2>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h6>{{ form.search.label }}</h6>
+                    {{ form.search(class="form-control", placeholder="Введите поисковый запрос") }}
+                    {% for error in form.search.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+                <div class="col-2">
+                    <h6 style="color:#F7F8FA">j</h6>
+                    {{ form.submit(type="submit", class="btn btn-primary", style="width: 100%;") }}
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col">
+                    <h6>{{ form.role.label }}</h6>
+                    {{ form.role(class="form-control") }}<br>
+                        {% for error in form.role.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="list-group">
+                        {% for user in users %}
+                        <a href="/profile/{{ user.id }}" class="list-group-item list-group-item-action">
+                            <div style="font-size: 17px;line-height: 24px;font-weight: 400;font-family: Helvetica,Arial,sans-serif;color: #333;word-break: break-word;">
+                                <img src="/{{ user.profile_img_path }}" width="40" height="40" style="border-radius: 100px;" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
+                                {% if user.role_id == 1 %}
+                                <span>Имя: <span style="color: blue">{{ user.name }}</span>, Email: <span style="color: blue">{{ user.email }}</span>, Роль: <span style="color: red">Администратор</span></span>
+                                {% else %}
+                                <span>Имя: <span style="color: blue">{{ user.name }}</span>, Email: <span style="color: blue">{{ user.email }}</span>, Роль: <span style="color: blue">Обычный</span></span>
+                                {% endif %}
+                                <p>Дата регистрации: {{ user.time.strftime("%Y-%m-%d %H:%M") }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-outline-secondary" href="/search_users" style="width:100%;">
+                        Предыдущая (0)
+                    </a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-outline-primary" href="/search_users" style="width:100%;">
+                        Следующая (0)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
