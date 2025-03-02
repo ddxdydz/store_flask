@@ -617,7 +617,7 @@ def upload_image(img_data) -> str:
     if img_data:
         img_name = f"{str(round(time() * 1000))}.{img_data.filename.split('.')[-1]}"
         img_path = os.path.join(UPLOAD_IMAGES_FOLDER, img_name)
-        img_data.save(img_path)
+        img_data.save(os.path.join(PROJECT_ROOT, UPLOAD_IMAGES_FOLDER, img_name))
         return img_path
     return ''
 
@@ -656,8 +656,8 @@ def main():
 
     add_temp_data()
 
-    # app.run(port=8000, host='127.0.0.1')
+#    app.run(port=8000, host='127.0.0.1')
 
 
-# if __name__ == '__main__':
-#     main()
+#if __name__ == '__main__':
+main()

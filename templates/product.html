@@ -78,8 +78,8 @@
                     </div>
                     <div class="col-sm">
                         {% if review.profile_img_path %}
-                        <a href="\{{ review.profile_img_path }}" target="_blank">
-                            <img src="\{{ review.profile_img_path }}" class="img-fluid" alt="Картинка отзыва" style="height: 130px; border-radius: 10%; border: 2px solid #007bff;">
+                        <a href="/{{ review.profile_img_path }}" target="_blank">
+                            <img src="/{{ review.profile_img_path }}" class="img-fluid" alt="Картинка отзыва" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10%; border: 2px solid #007bff;" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
                         </a>
                         {% endif %}
                     </div>
