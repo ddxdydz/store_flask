@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from time import time
 
 from flask import Flask, request, render_template, redirect, abort
@@ -17,7 +17,6 @@ UPLOAD_IMAGES_FOLDER = os.path.join('static', 'imgs', 'uploaded')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'wtf_key'
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///store.db'
 api = Api(app)
 hashed_admin_key = "pbkdf2:sha256:150000$phWNreer$470eaca149f9a2c60bf848a614915b890e26015c5ed47ab69a7e5fa533d7cacf"
@@ -645,19 +644,19 @@ def generate_routes():
     api.add_resource(UserListResource, '/api/users')
 
 
-db_session.global_init("db/store.db")
-generate_routes()
+def main():
+    db_file = os.path.join(os.path.dirname(__file__), 'db/store.db')
+    if not os.path.exists(db_file):
+        print(f"Файл базы данных не найден: {db_file}")
+    db_session.global_init(db_file)
+    generate_routes()
 
     # from db.petstore_init_data.init_basic_data import init_basic_data
     # init_basic_data()
 
-add_temp_data()
+    add_temp_data()
 
     # app.run(port=8000, host='127.0.0.1')
-
-# from flask_ngrok import run_with_ngrok
-# run_with_ngrok(app)
-app.run()
 
 
 # if __name__ == '__main__':
