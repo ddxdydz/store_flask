@@ -1,6 +1,5 @@
 import requests
 
-# BASE_URL = 'https://zil10.pythonanywhere.com/api/reviews'
 BASE_URL = 'http://127.0.0.1:8000/api/reviews'
 API_KEY = {'apikey': 'AA61BEF91'}
 
@@ -37,8 +36,7 @@ else:
 review_id_to_update = next_id
 update_review_data = {
     'score': 4,
-    'about': 'Хороший продукт, но есть недочеты.',
-    'profile_img_path': 'path/to/updated/review/image.png'
+    'about': 'Хороший продукт, но есть недочеты.'
 }
 response_update_review = requests.put(f'{BASE_URL}/{review_id_to_update}', json=update_review_data, headers=API_KEY)
 if response_update_review.status_code == 200:

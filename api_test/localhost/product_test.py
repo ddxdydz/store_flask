@@ -1,6 +1,5 @@
 import requests
 
-# BASE_URL = 'https://zil10.pythonanywhere.com/api/products'
 BASE_URL = 'http://127.0.0.1:8000/api/products'
 API_KEY = {'apikey': 'AA61BEF91'}
 

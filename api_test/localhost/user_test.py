@@ -1,6 +1,5 @@
 import requests
 
-# BASE_URL = 'https://zil10.pythonanywhere.com/api/users'
 BASE_URL = 'http://127.0.0.1:8000/api/users'
 API_KEY = {'apikey': 'AA61BEF91'}
 
@@ -33,8 +32,7 @@ update_data = {
     'password': 'new_password',
     'role_id': 2,
     'balance': 150.0,
-    'about': 'Обновленная информация о пользователе',
-    'profile_img_path': 'path/to/new/image.png'
+    'about': 'Обновленная информация о пользователе'
 }
 response_update = requests.put(f'{BASE_URL}/{user_id_to_update}', json=update_data, headers=API_KEY)
 if response_update.status_code == 200:
