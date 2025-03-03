@@ -43,7 +43,7 @@ class OrderEntryResource(Resource):
         if args['user_id']:
             order.user_id = args['user_id']
         if args['description']:
-            order.address = args['description']
+            order.description = args['description']
         if args['time']:
             order.time = args['time']
 
@@ -57,7 +57,7 @@ class OrderEntryListResource(Resource):
         session = db_session.create_session()
         orders = session.query(OrderEntry).all()
         return jsonify({
-            'orders': [item.to_dict(only=('id', 'user_id'))
+            'orders': [item.to_dict(only=('id', 'description', 'user_id'))
                        for item in orders]})
 
     @check_api
@@ -71,7 +71,7 @@ class OrderEntryListResource(Resource):
         order = OrderEntry()
         order.user_id = args['user_id']
         if args['description']:
-            order.address = args['description']
+            order.description = args['description']
         if args['time']:
             order.time = args['time']
 
