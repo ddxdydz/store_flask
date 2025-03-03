@@ -3,10 +3,8 @@ from datetime import datetime
 from flask import abort, jsonify
 from flask_restful import abort, Resource
 
-from api.category_resources import abort_if_category_not_found
 from api.check_api import check_api
-from api.user_reqparser import *
-from api.user_resources import abort_if_user_not_found
+from api.product_reqparser import *
 from data import db_session
 from data.__all_models import *
 
@@ -83,6 +81,8 @@ class ProductListResource(Resource):
     def post(self):
         args = parser.parse_args()
         session = db_session.create_session()
+
+        print(args)
 
         if not all((args['user_id'], args['category_id'])):
             abort(400, message="Bad request to post product")

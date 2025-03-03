@@ -630,7 +630,7 @@ def add_temp_data():
 
 
 def generate_routes():
-    api.add_resource(CardEntryResource, '/api/card_entry/<int:user_id>/<int:product_id>')
+    api.add_resource(CardEntryResource, '/api/card_entries/<int:user_id>/<int:product_id>')
     api.add_resource(CardEntryListResource, '/api/card_entries')
     api.add_resource(CategoryResource, '/api/categories/<int:category_id>')
     api.add_resource(CategoryListResource, '/api/categories')
@@ -655,9 +655,8 @@ def main():
     # init_basic_data()
 
     add_temp_data()
+    # app.run(port=8000, host='127.0.0.1')
 
-#    app.run(port=8000, host='127.0.0.1')
 
-
-#if __name__ == '__main__':
+# if __name__ == '__main__':
 main()

@@ -4,9 +4,7 @@ from flask import abort, jsonify
 from flask_restful import abort, Resource
 
 from api.check_api import check_api
-from api.product_resources import abort_if_product_not_found
-from api.user_reqparser import *
-from api.user_resources import abort_if_user_not_found
+from api.review_reqparser import *
 from data import db_session
 from data.__all_models import *
 

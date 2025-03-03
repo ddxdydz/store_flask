@@ -30,7 +30,7 @@ class UserResource(Resource):
         abort_if_user_not_found(user_id)
         session = db_session.create_session()
         user = session.query(User).get(user_id)
-        # session.delete(user)
+        session.delete(user)
 
         user.set_password("deleted3424jl23")
 

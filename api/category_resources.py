@@ -1,8 +1,8 @@
 from flask import abort, jsonify
 from flask_restful import abort, Resource
 
+from api.category_reqparser import *
 from api.check_api import check_api
-from api.user_reqparser import *
 from data import db_session
 from data.__all_models import *
 
