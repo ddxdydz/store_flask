@@ -41,7 +41,7 @@ else:
     print('Ошибка при обновлении пользователя:', response_update.status_code)
 
 # Пример запроса для получения информации о конкретном пользователе
-user_id_to_get = 6
+user_id_to_get = next_id
 response_get = requests.get(f'{BASE_URL}/{user_id_to_get}', headers=API_KEY)
 if response_get.status_code == 200:
     print('Полученный пользователь:', response_get.json())
@@ -49,7 +49,7 @@ else:
     print('Ошибка при получении пользователя:', response_get.status_code)
 
 # Пример запроса для удаления пользователя
-user_id_to_delete = 6
+user_id_to_delete = next_id
 response_delete = requests.delete(f'{BASE_URL}/{user_id_to_delete}', headers=API_KEY)
 if response_delete.status_code == 200:
     print('Пользователь удален:', response_delete.json())

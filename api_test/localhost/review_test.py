@@ -16,7 +16,7 @@ new_review_data = {
     'user_id': 1,
     'product_id': 2,
     'score': 5,
-    'about': 'Отличный продукт!'
+    'about': 'Отличный'
 }
 response_post_review = requests.post(BASE_URL, json=new_review_data, headers=API_KEY)
 if response_post_review.status_code == 200:
@@ -35,8 +35,8 @@ else:
 # Пример запроса для обновления отзыва
 review_id_to_update = next_id
 update_review_data = {
-    'score': 4,
-    'about': 'Хороший продукт, но есть недочеты.'
+        'score': 4,
+        'about': 'Хороший'
 }
 response_update_review = requests.put(f'{BASE_URL}/{review_id_to_update}', json=update_review_data, headers=API_KEY)
 if response_update_review.status_code == 200:

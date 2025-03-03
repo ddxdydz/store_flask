@@ -41,7 +41,6 @@ product_id_to_update = next_id
 update_data = {
     'category_id': 3,
     'name': 'Обновленный продукт',
-    'profile_img_path': 'path/to/updated/image.png',
     'short_description': 'Обновленное краткое описание',
     'long_description': 'Обновленное длинное описание',
     'specifications': 'Обновленные спецификации',
