@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-from time import time
 
 from flask import Flask, request, render_template, redirect, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -9,11 +8,10 @@ from werkzeug.security import check_password_hash
 
 import data.db_session as db_session
 from api.__all_resources import *
+from api.other_api_parts import login_api, img_api
 from data.__all_models import *
+from data.upload_tools.upload_image import upload_image
 from forms.__all_forms import *
-
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_IMAGES_FOLDER = os.path.join('static', 'imgs', 'uploaded')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'wtf_key'
@@ -613,15 +611,6 @@ def delete_review(review_id):
     return redirect(f'/product/{review.product_id}')
 
 
-def upload_image(img_data) -> str:
-    if img_data:
-        img_name = f"{str(round(time() * 1000))}.{img_data.filename.split('.')[-1]}"
-        img_path = os.path.join(UPLOAD_IMAGES_FOLDER, img_name)
-        img_data.save(os.path.join(PROJECT_ROOT, UPLOAD_IMAGES_FOLDER, img_name))
-        return img_path
-    return ''
-
-
 def add_temp_data():
     global all_category_names, all_role_names
     session = db_session.create_session()
@@ -649,13 +638,15 @@ def main():
     if not os.path.exists(db_file):
         print(f"Файл базы данных не найден: {db_file}")
     db_session.global_init(db_file)
+    app.register_blueprint(login_api.blueprint)
+    app.register_blueprint(img_api.blueprint)
     generate_routes()
 
     # from db.petstore_init_data.init_basic_data import init_basic_data
     # init_basic_data()
 
     add_temp_data()
-    # app.run(port=8000, host='127.0.0.1')
+    app.run(port=8000, host='127.0.0.1')
 
 
 # if __name__ == '__main__':
