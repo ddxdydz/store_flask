@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 import sqlalchemy
@@ -23,8 +22,10 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     role_id = sqlalchemy.Column(
         sqlalchemy.Integer, sqlalchemy.ForeignKey('roles.id'), default=2)
     balance = sqlalchemy.Column(sqlalchemy.Integer, default=0)
-    about = sqlalchemy.Column(sqlalchemy.String, default="Это описание профиля пользователя. Здесь можно указать интересы и другую информацию.")
-    profile_img_path = sqlalchemy.Column(sqlalchemy.String, default=os.path.join('static', 'imgs', 'noimg.jpg'))
+    about = sqlalchemy.Column(
+        sqlalchemy.String,
+        default="Это описание профиля пользователя. Здесь можно указать интересы и другую информацию.")
+    profile_img_path = sqlalchemy.Column(sqlalchemy.String, default='static/imgs/noimg.jpg')
     time = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.now)
 
     role = orm.relation('Role')

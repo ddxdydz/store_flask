@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 import sqlalchemy
@@ -18,7 +17,7 @@ class Product(SqlAlchemyBase, SerializerMixin):
     category_id = sqlalchemy.Column(
         sqlalchemy.Integer, sqlalchemy.ForeignKey('categories.id'), nullable=False)
     name = sqlalchemy.Column(sqlalchemy.String, default="Без названия")
-    profile_img_path = sqlalchemy.Column(sqlalchemy.String, default=os.path.join('static', 'imgs', 'noimg.jpg'))
+    profile_img_path = sqlalchemy.Column(sqlalchemy.String, default='static/imgs/noimg.jpg')
     short_description = sqlalchemy.Column(sqlalchemy.String, default="Нет данных")
     long_description = sqlalchemy.Column(sqlalchemy.String, default="Нет данных")
     specifications = sqlalchemy.Column(sqlalchemy.String, default="Нет данных")

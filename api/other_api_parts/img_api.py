@@ -3,6 +3,7 @@ import os
 from flask import Blueprint, request, jsonify, send_file, abort
 
 from data.upload_tools.upload_image import upload_image
+from data.upload_tools.project_root import PROJECT_ROOT
 
 blueprint = Blueprint('img_api', __name__, template_folder='templates')
 
@@ -13,10 +14,11 @@ def get_img():
         return jsonify({'error': 'Empty request'})
     if not all(key in request.json for key in ['path']):
         return jsonify({'error': 'Bad request'})
-    if not os.path.exists(request.json['path']):
+    path = os.path.join(PROJECT_ROOT, request.json['path'])
+    if not os.path.exists(path):
         return jsonify({'error': 'Path does not exist'})
     try:
-        return send_file(request.json['path'])
+        return send_file(path)
     except FileNotFoundError:
         abort(404)
 
