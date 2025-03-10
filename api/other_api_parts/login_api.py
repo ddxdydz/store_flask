@@ -17,5 +17,5 @@ def check_authorization_data():
     session = db_session.create_session()
     user = session.query(User).filter(User.email == request.json['email']).first()
     if user and user.check_password(request.json['password']):
-        return jsonify({'result': True})
-    return jsonify({'result': False})
+        return jsonify({'user_id': user.id, 'result': True})
+    return jsonify({'user_id': user.id, 'result': False})

@@ -5,6 +5,7 @@ from api.check_api import check_api
 from api.user_reqparser import *
 from data import db_session
 from data.__all_models import *
+from forms.validators.EmailValidator import is_email_valid
 
 
 def abort_if_user_not_found(user_id):
@@ -76,6 +77,11 @@ class UserListResource(Resource):
         if not all((args['name'], args['email'], args['password'])):
             abort(400, message="Bad request to post user")
 
+        if not is_email_valid(args['email']):
+            return jsonify({'success': 'NO', 'correct_email': False})
+        if session.query(User).filter(User.email == args['email']).first():
+            return jsonify({'success': 'NO', 'correct_email': True, 'unique_email': False})
+
         user = User()
         user.name = args['name']
         user.set_password(args['password'])
@@ -91,4 +97,5 @@ class UserListResource(Resource):
 
         session.add(user)
         session.commit()
-        return jsonify({'success': 'OK'})
+        user_id = session.query(User).filter(User.email == args['email']).first().id
+        return jsonify({'success': 'OK', 'correct_email': True, 'unique_email': True, 'user_id': user_id})

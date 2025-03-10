@@ -14,16 +14,22 @@ class Logger:
             log_file.write(f"{datetime.now()}: {message}\n")
 
     def log_request(self, rq):
-        data = [
-            f"API: {int('api' in rq.url)}",
-            f"remote_addr: {rq.remote_addr}",
-            f"{rq}",
-            f"body: {rq.json}",
-            f"args: {rq.args}",
-            f"form: {rq.form}",
-            f"headers: {list(rq.headers.items())}",
-        ]
-        self.log_message(", ".join(data))
+        try:
+            header_keys = tuple(rq.headers.keys())
+            data = [
+                f"API: {int('api' in rq.url)}",
+                f"APIKEY: {rq.headers['Apikey'] if 'Apikey' in header_keys else None}",
+                f"X-R: {rq.headers['X-Real-Ip'] if 'X-Real-Ip' in header_keys else None}",
+                f"X-F: {rq.headers['X-Forwarded-For'] if 'X-Forwarded-For' in header_keys else None}",
+                f"{rq}",
+                f"body: {rq.json}",
+                f"args: {rq.args}",
+                f"form: {rq.form}",
+                f"headers: {list(rq.headers.items())}"
+            ]
+            self.log_message(", ".join(data))
+        except Exception:
+            self.log_message("Logger Error")
 
 
 logger = Logger()
