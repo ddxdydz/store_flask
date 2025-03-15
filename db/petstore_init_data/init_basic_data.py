@@ -16,7 +16,7 @@ CATEGORIES = (
 )
 
 
-def init_basic_data():  # launch at main.py by import
+def init_basic_data():  # launch at main1.py by import
     session = db_session.create_session()
     for role in session.query(Role).all():
         session.delete(role)

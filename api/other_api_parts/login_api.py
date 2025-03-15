@@ -7,7 +7,7 @@ from data.user import User
 blueprint = Blueprint('login_api', __name__, template_folder='templates')
 
 
-@blueprint.route('/api/check_authorization_data')
+@blueprint.route('/api/check_authorization_data', methods=['POST'])
 @check_api
 def check_authorization_data():
     if not request.json:
