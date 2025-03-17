@@ -8,5 +8,4 @@ class Category(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'categories'
     id = sqlalchemy.Column(
         sqlalchemy.Integer, autoincrement=True, primary_key=True, nullable=False)
-    name = sqlalchemy.Column(
-        sqlalchemy.String, unique=True, nullable=False)
+    name = sqlalchemy.Column(sqlalchemy.String, default="Без названия", nullable=False)

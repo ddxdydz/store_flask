@@ -2,9 +2,9 @@ from flask import abort, jsonify
 from flask_restful import abort, Resource
 
 from api.category_reqparser import *
-from api.check_api import check_api
 from data import db_session
 from data.__all_models import *
+from data.utils.check_api import check_api
 
 
 def abort_if_category_not_found(category_id):
@@ -69,4 +69,4 @@ class CategoryListResource(Resource):
 
         session.add(category)
         session.commit()
-        return jsonify({'success': 'OK'})
+        return jsonify({'success': 'OK', 'category_id': category.id})

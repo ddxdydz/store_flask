@@ -21,14 +21,14 @@
         </p>
         <div>
             <h5>Содержимое заказа:</h5>
-            {% for card_entry_data in card_entries_data %}
-            <p>- {{ card_entry_data["product_name"] }}, Количество: {{ card_entry_data["count"] }} шт., Стоимость: {{ card_entry_data["total_price"] }} у.е.</p>
+            {% for cart_entry_data in cart_entries_data %}
+            <p>- {{ cart_entry_data["product_name"] }}, Количество: {{ cart_entry_data["count"] }} шт., Стоимость: {{ cart_entry_data["total_price"] }} у.е.</p>
             {% endfor %}
             <h5>Общая стоимость: </h5>
-            <p>{{ total_card_price }} у.е.</p>
+            <p>{{ total_cart_price }} у.е.</p>
         </div>
         <p>{{ form.submit(type="submit", class="btn btn-primary", style="width: 49.5%; margin-top: 1.5%; float: left;") }}
-        <a class="btn btn-outline-success" href="/user_card/{{ current_user.id }}" style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
+        <a class="btn btn-outline-success" href="/user_cart/{{ current_user.id }}" style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
         {{message}}
     </form>
 </div>

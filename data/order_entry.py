@@ -17,7 +17,7 @@ class OrderEntry(SqlAlchemyBase, SerializerMixin):
     description = sqlalchemy.Column(sqlalchemy.String, default="Нет данных")
     time = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.now)
 
-    role = orm.relation('User')
+    user = orm.relation('User')
 
     def update_time(self):
         self.time = datetime.now()

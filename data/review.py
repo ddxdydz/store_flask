@@ -24,4 +24,4 @@ class Review(SqlAlchemyBase, SerializerMixin):
     profile_img_path = sqlalchemy.Column(sqlalchemy.String, default='')
 
     user = orm.relation('User')
-    category = orm.relation('Product')
+    product = orm.relation('Product')

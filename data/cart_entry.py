@@ -5,8 +5,8 @@ from sqlalchemy_serializer import SerializerMixin
 from data.db_session import SqlAlchemyBase
 
 
-class CardEntry(SqlAlchemyBase, SerializerMixin):
-    __tablename__ = 'card_entries'
+class CartEntry(SqlAlchemyBase, SerializerMixin):
+    __tablename__ = 'cart_entries'
     user_id = sqlalchemy.Column(
         sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'), primary_key=True, nullable=False)
     product_id = sqlalchemy.Column(
@@ -14,10 +14,10 @@ class CardEntry(SqlAlchemyBase, SerializerMixin):
     count = sqlalchemy.Column(sqlalchemy.Integer, default=1)
 
     user = orm.relation('User')
-    category = orm.relation('Product')
+    product = orm.relation('Product')
 
-    def increase(self):
+    def add(self):
         self.count += 1
 
-    def decrease(self):
+    def sub(self):
         self.count -= 1

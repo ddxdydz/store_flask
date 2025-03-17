@@ -1,7 +1,7 @@
 import os
 from time import time
 
-from data.upload_tools.project_root import PROJECT_ROOT
+from data.utils.project_root import PROJECT_ROOT
 
 UPLOAD_IMAGES_FOLDER = os.path.join('static', 'imgs', 'uploaded')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}

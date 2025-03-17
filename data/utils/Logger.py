@@ -10,7 +10,7 @@ class Logger:
         return cls._instance
 
     def log_message(self, message):
-        with open(f"app.log", "a") as log_file:
+        with open(f"app.log", "a", encoding="UTF-8") as log_file:
             log_file.write(f"{datetime.now()}: {message}\n")
 
     def log_request(self, rq):
@@ -50,5 +50,5 @@ def redirect(*args, **kwargs):
     return rd(*args, **kwargs)
 
 
-# check_api: logger.log_request(request)
+# check_api: from data.utils.Logger import logger   logger.log_request(request)
 # main: from api.Logger import *

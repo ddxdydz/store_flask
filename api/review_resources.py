@@ -3,10 +3,10 @@ from datetime import datetime
 from flask import abort, jsonify
 from flask_restful import abort, Resource
 
-from api.check_api import check_api
 from api.review_reqparser import *
 from data import db_session
 from data.__all_models import *
+from data.utils.check_api import check_api
 
 
 def abort_if_review_not_found(review_id):
@@ -43,6 +43,10 @@ class ReviewResource(Resource):
         args = parser.parse_args()
         review = session.query(Review).get(review_id)
 
+        if args['user_id']:
+            review.score = args['user_id']
+        if args['product_id']:
+            review.score = args['product_id']
         if args['score']:
             review.score = args['score']
         if args['about']:
@@ -84,4 +88,4 @@ class ReviewListResource(Resource):
 
         session.add(review)
         session.commit()
-        return jsonify({'success': 'OK'})
+        return jsonify({'success': 'OK', 'review_id': review.id})

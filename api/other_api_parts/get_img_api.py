@@ -2,8 +2,8 @@ import os
 
 from flask import Blueprint, request, jsonify, send_file, abort
 
-from api.check_api import check_api
-from data.upload_tools.project_root import PROJECT_ROOT
+from data.utils.check_api import check_api
+from data.utils.project_root import PROJECT_ROOT
 
 blueprint = Blueprint('get_img', __name__, template_folder='templates')
 

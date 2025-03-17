@@ -23,7 +23,6 @@ class Product(SqlAlchemyBase, SerializerMixin):
     specifications = sqlalchemy.Column(sqlalchemy.String, default="Нет данных")
     promo = sqlalchemy.Column(sqlalchemy.String, default="Нет")
     price = sqlalchemy.Column(sqlalchemy.Integer, default=0)
-    price_title = sqlalchemy.Column(sqlalchemy.String, default="Не указана")
     time = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.now)
     last_edit_time = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.now)
 

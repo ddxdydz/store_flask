@@ -20,7 +20,7 @@
     </style>
 <div style="margin: auto;margin-top: 3%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px; max-width: 780px">
     <div class="text-center">
-        <img src="/{{ user.profile_img_path }}" class="avatar mb-3" width="auto" height="250" alt="Фото пользователя" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
+        <img src="/{{ user.profile_img_path }}" class="avatar mb-3" width="auto" height="250px" style="max-width: 400px" alt="Фото пользователя" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
         <h2>Имя пользователя: <span style="color:#2a5885;">{{ user.name }}</span></h2>
         <p class="text-muted">Время регистрации: <strong>{{ user.time.strftime("%Y-%m-%d %H:%M") }} </strong></p>
         <p class="text-muted">
@@ -51,7 +51,7 @@
     </div>
     {% if current_user.is_authenticated and (current_user.id == user.id) %}
     <div class="text-center mt-4">
-        <a href="/to_card" class="btn btn-primary btn-custom">Моя корзина</a>
+        <a href="/to_cart" class="btn btn-primary btn-custom">Моя корзина</a>
         <a href="/user_orders" class="btn btn-secondary btn-custom">Мои заказы</a>
         <a href="/edit_profile/{{ current_user.id }}" class="btn btn-warning btn-custom">Изменить профиль</a>
         {% if current_user.is_authenticated and (current_user.id == user.id) and (role.id != 1) %}

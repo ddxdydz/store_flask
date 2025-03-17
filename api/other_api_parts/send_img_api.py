@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 
-from api.check_api import check_api
-from data.upload_tools.upload_image import upload_image
+from data.utils.check_api import check_api
+from data.utils.upload_image import upload_image
 
 blueprint = Blueprint('send_img', __name__, template_folder='templates')
 

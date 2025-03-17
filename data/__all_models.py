@@ -1,4 +1,4 @@
-from data.card_entry import CardEntry
+from data.cart_entry import CartEntry
 from data.category import Category
 from data.order_entry import OrderEntry
 from data.product import Product

@@ -3,10 +3,10 @@ from datetime import datetime
 from flask import abort, jsonify
 from flask_restful import abort, Resource
 
-from api.check_api import check_api
 from api.product_reqparser import *
 from data import db_session
 from data.__all_models import *
+from data.utils.check_api import check_api
 
 
 def abort_if_product_not_found(product_id):
@@ -25,7 +25,7 @@ class ProductResource(Resource):
         return jsonify({
             'product': product.to_dict(
                 only=('id', 'user_id', 'category_id', 'name', 'profile_img_path', 'short_description',
-                      'long_description', 'specifications', 'promo', 'price', 'price_title',
+                      'long_description', 'specifications', 'promo', 'price',
                       'time', 'last_edit_time'))})
 
     @check_api
@@ -44,6 +44,8 @@ class ProductResource(Resource):
         args = parser.parse_args()
         product = session.query(Product).get(product_id)
 
+        if args['user_id']:
+            product.user_id = args['user_id']
         if args['category_id']:
             product.category_id = args['category_id']
         if args['name']:
@@ -60,8 +62,6 @@ class ProductResource(Resource):
             product.promo = args['promo']
         if args['price']:
             product.price = args['price']
-        if args['price_title']:
-            product.price_title = args['price_title']
         product.last_edit_time = datetime.now()
 
         session.commit()
@@ -81,8 +81,6 @@ class ProductListResource(Resource):
     def post(self):
         args = parser.parse_args()
         session = db_session.create_session()
-
-        print(args)
 
         if not all((args['user_id'], args['category_id'])):
             abort(400, message="Bad request to post product")
@@ -104,9 +102,7 @@ class ProductListResource(Resource):
             product.promo = args['promo']
         if args['price']:
             product.price = args['price']
-        if args['price_title']:
-            product.price_title = args['price_title']
 
         session.add(product)
         session.commit()
-        return jsonify({'success': 'OK'})
+        return jsonify({'success': 'OK', 'product_id': product.id})

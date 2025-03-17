@@ -1,10 +1,10 @@
 from flask import abort, jsonify
 from flask_restful import abort, Resource
 
-from api.check_api import check_api
 from api.order_entry_reqparser import *
 from data import db_session
 from data.__all_models import *
+from data.utils.check_api import check_api
 
 
 def abort_if_order_not_found(order_id):
@@ -77,4 +77,4 @@ class OrderEntryListResource(Resource):
 
         session.add(order)
         session.commit()
-        return jsonify({'success': 'OK'})
+        return jsonify({'success': 'OK', 'order_id': order.id})

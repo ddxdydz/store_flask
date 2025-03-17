@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 
 import data.db_session as db_session
-from api.check_api import check_api
+from data.utils.check_api import check_api
 from data.user import User
 
 blueprint = Blueprint('login_api', __name__, template_folder='templates')

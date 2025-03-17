@@ -1,49 +1,48 @@
 import requests
 
+from api.api_test.get_last_id import get_last_id
+
 BASE_URL = 'http://127.0.0.1:8000/api/categories'
 API_KEY = {'apikey': 'AA61BEF91'}
 
-# Пример запроса для получения списка категорий
-response_get_all_categories = requests.get(BASE_URL, headers=API_KEY)
-if response_get_all_categories.status_code == 200:
-    print('Список категорий:', response_get_all_categories.json())
-else:
-    print('Ошибка при получении списка категорий:', response_get_all_categories.status_code)
-next_id = max(response_get_all_categories.json()["categories"], key=lambda elem: elem["id"])["id"] + 1
 
-# Пример запроса для создания новой категории
-new_category_data = {
-    'name': 'Электроника'
-}
-response_post_category = requests.post(BASE_URL, json=new_category_data, headers=API_KEY)
-if response_post_category.status_code == 200:
-    print('Категория создана:', response_post_category.json())
-else:
-    print('Ошибка при создании категории:', response_post_category.status_code)
+def get_list():  # Пример запроса для получения списка категорий
+    response = requests.get(BASE_URL, headers=API_KEY)
+    print(f"get - status_code: {response.status_code}, json: {response.json()}")
 
-# Пример запроса для получения информации о конкретной категории
-category_id_to_get = next_id
-response_get_category = requests.get(f'{BASE_URL}/{category_id_to_get}', headers=API_KEY)
-if response_get_category.status_code == 200:
-    print('Полученная категория:', response_get_category.json())
-else:
-    print('Ошибка при получении категории:', response_get_category.status_code)
 
-# Пример запроса для обновления категории
-category_id_to_update = next_id
-update_category_data = {
-    'name': 'Бытовая техника'
-}
-response_update_category = requests.put(f'{BASE_URL}/{category_id_to_update}', json=update_category_data, headers=API_KEY)
-if response_update_category.status_code == 200:
-    print('Категория обновлена:', response_update_category.json())
-else:
-    print('Ошибка при обновлении категории:', response_update_category.status_code)
+def post():  # Пример запроса для создания новой категории
+    new_category_data = {'name': 'Электроника'}
+    response = requests.post(BASE_URL, json=new_category_data, headers=API_KEY)
+    print(f"pst - status_code: {response.status_code}, json: {response.json()}")
+    return response.json()["category_id"]
 
-# Пример запроса для удаления категории
-category_id_to_delete = next_id
-response_delete_category = requests.delete(f'{BASE_URL}/{category_id_to_delete}', headers=API_KEY)
-if response_delete_category.status_code == 200:
-    print('Категория удалена:', response_delete_category.json())
-else:
-    print('Ошибка при удалении категории:', response_delete_category.status_code)
+
+def get_one(category_id=None):  # Пример запроса для получения информации о конкретной категории
+    if category_id is None:
+        category_id = get_last_id(BASE_URL, API_KEY, "categories")
+    response = requests.get(f'{BASE_URL}/{category_id}', headers=API_KEY)
+    print(f"get - status_code: {response.status_code}, json: {response.json()}")
+
+
+def put(category_id=None):  # Пример запроса для обновления категории
+    if category_id is None:
+        category_id = get_last_id(BASE_URL, API_KEY, "categories")
+    update_category_data = {'name': 'Бытовая техника'}
+    response = requests.put(f'{BASE_URL}/{category_id}', json=update_category_data, headers=API_KEY)
+    print(f"put - status_code: {response.status_code}, json: {response.json()}")
+
+
+def delete(category_id=None):  # Пример запроса для удаления категории
+    if category_id is None:
+        category_id = get_last_id(BASE_URL, API_KEY, "categories")
+    response = requests.delete(f'{BASE_URL}/{category_id}', headers=API_KEY)
+    print(f"del - status_code: {response.status_code}, json: {response.json()}")
+
+
+if __name__ == "__main__":
+    get_list()
+    output_id = post()
+    get_one(output_id)
+    put(output_id)
+    delete(output_id)

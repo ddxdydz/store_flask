@@ -6,11 +6,11 @@ from flask_restful import Api
 from werkzeug.security import check_password_hash
 
 import data.db_session as db_session
-from api.Logger import *
 from api.__all_resources import *
 from api.other_api_parts import login_api, get_img_api, send_img_api
 from data.__all_models import *
-from data.upload_tools.upload_image import upload_image
+from data.utils.Logger import *
+from data.utils.upload_image import upload_image
 from forms.__all_forms import *
 
 app = Flask(__name__)
@@ -162,13 +162,13 @@ def user_balance(user_id):
     if request.method == "GET":
         return render_template('balance.html', form=form, user=user)
     else:
-        if isinstance(form.count.data, int) and 0 < form.count.data < 999_999_999:
+        if isinstance(form.count.data, int) and 0 < form.count.data < 100001:
             user.add_to_balance(int(form.count.data))
             session.commit()
             return redirect(f'/profile/{user.id}')
         return render_template(
             'balance.html', form=form, user=user,
-            message="Ошибка ввода: Сумма пополнения должна быть числом в диапазоне от 1 до 10000")
+            message="Ошибка ввода: Сумма пополнения должна быть числом в диапазоне от 1 до 100000")
 
 
 @app.route("/admin_verification/<int:user_id>", methods=['GET', 'POST'])
@@ -229,85 +229,85 @@ def edit_profile(user_id):
         return redirect('/')
 
 
-def get_current_user_card_info() -> (int, list[dict]):
-    card_entries_data = []
-    total_card_price = 0
+def get_current_user_cart_info() -> (int, list[dict]):
+    cart_entries_data = []
+    total_cart_price = 0
     session = db_session.create_session()
-    card_entries = session.query(CardEntry).filter(CardEntry.user_id == current_user.id)
-    for card_entry in card_entries:
-        product = session.query(Product).filter(Product.id == card_entry.product_id).first()
-        card_entries_data.append({
+    cart_entries = session.query(CartEntry).filter(CartEntry.user_id == current_user.id)
+    for cart_entry in cart_entries:
+        product = session.query(Product).filter(Product.id == cart_entry.product_id).first()
+        cart_entries_data.append({
             "product_id": product.id,
             "product_name": product.name,
             "profile_img_path": product.profile_img_path,
-            "count": card_entry.count,
-            "total_price": card_entry.count * product.price
+            "count": cart_entry.count,
+            "total_price": cart_entry.count * product.price
         })
-        total_card_price += card_entry.count * product.price
-    return total_card_price, card_entries_data
+        total_cart_price += cart_entry.count * product.price
+    return total_cart_price, cart_entries_data
 
 
-@app.route("/to_card")
-def to_card():
+@app.route("/to_cart")
+def to_cart():
     if not current_user.is_authenticated:
         return redirect("/register")
-    return redirect(f"/user_card/{current_user.id}")
+    return redirect(f"/user_cart/{current_user.id}")
 
 
-@app.route("/user_card/<int:user_id>")
-def user_card(user_id):
+@app.route("/user_cart/<int:user_id>")
+def user_cart(user_id):
     if not current_user.is_authenticated:
         return redirect("/register")
     if not current_user.id == user_id:
         return abort(403)
-    total_card_price, card_entries_data = get_current_user_card_info()
-    return render_template('user_card.html',
-                           card_entries_data=card_entries_data,
-                           total_card_price=total_card_price)
+    total_cart_price, cart_entries_data = get_current_user_cart_info()
+    return render_template('user_cart.html',
+                           cart_entries_data=cart_entries_data,
+                           total_cart_price=total_cart_price)
 
 
-@app.route("/add_to_user_card/<int:product_id>", methods=['GET', 'POST'])
-def add_to_user_card(product_id):
+@app.route("/add_to_user_cart/<int:product_id>", methods=['GET', 'POST'])
+def add_to_user_cart(product_id):
     if not current_user.is_authenticated:
         return redirect("/register")
 
     session = db_session.create_session()
-    card_entry = session.query(CardEntry).filter(
-        CardEntry.product_id == product_id,
-        CardEntry.user_id == current_user.id).first()
-    if card_entry:
-        card_entry.increase()
+    cart_entry = session.query(CartEntry).filter(
+        CartEntry.product_id == product_id,
+        CartEntry.user_id == current_user.id).first()
+    if cart_entry:
+        cart_entry.add()
     else:
-        card_entry = CardEntry()
-        card_entry.product_id = product_id
-        card_entry.user_id = current_user.id
+        cart_entry = CartEntry()
+        cart_entry.product_id = product_id
+        cart_entry.user_id = current_user.id
 
-    session.add(card_entry)
+    session.add(cart_entry)
     session.commit()
 
-    if card_entry.count == 1:
+    if cart_entry.count == 1:
         return redirect(f"/product/{product_id}")
-    return redirect(f"/user_card/{current_user.id}")
+    return redirect(f"/user_cart/{current_user.id}")
 
 
-@app.route("/remove_from_user_card/<int:product_id>", methods=['GET', 'POST'])
-def remove_from_user_card(product_id):
+@app.route("/remove_from_user_cart/<int:product_id>", methods=['GET', 'POST'])
+def remove_from_user_cart(product_id):
     if not current_user.is_authenticated:
         return redirect("/register")
 
     session = db_session.create_session()
-    card_entry = session.query(CardEntry).filter(
-        CardEntry.product_id == product_id,
-        CardEntry.user_id == current_user.id).first()
-    if card_entry:
-        card_entry.decrease()
+    cart_entry = session.query(CartEntry).filter(
+        CartEntry.product_id == product_id,
+        CartEntry.user_id == current_user.id).first()
+    if cart_entry:
+        cart_entry.sub()
 
-    session.add(card_entry)
-    if card_entry.count == 0:
-        session.delete(card_entry)
+    session.add(cart_entry)
+    if cart_entry.count == 0:
+        session.delete(cart_entry)
     session.commit()
 
-    return redirect(f"/user_card/{current_user.id}")
+    return redirect(f"/user_cart/{current_user.id}")
 
 
 @app.route("/user_orders")
@@ -325,40 +325,40 @@ def do_order():
         return redirect("/register")
 
     form = OrderSubmitForm()
-    total_card_price, card_entries_data = get_current_user_card_info()
+    total_cart_price, cart_entries_data = get_current_user_cart_info()
     if request.method == "GET":
         return render_template(
-            'order_submit.html', card_entries_data=card_entries_data,
-            total_card_price=total_card_price, form=form)
+            'order_submit.html', cart_entries_data=cart_entries_data,
+            total_cart_price=total_cart_price, form=form)
     else:
-        if current_user.balance < total_card_price:
+        if current_user.balance < total_cart_price:
             return render_template(
-                'order_submit.html', card_entries_data=card_entries_data,
-                total_card_price=total_card_price, form=form,
+                'order_submit.html', cart_entries_data=cart_entries_data,
+                total_cart_price=total_cart_price, form=form,
                 message=f"Недостаточно у.е. на балансе для подтверждения заказа. Баланс: {current_user.balance} у.е.")
         session = db_session.create_session()
 
         user = session.query(User).filter(User.id == current_user.id).first()
-        user.balance -= total_card_price
+        user.balance -= total_cart_price
 
         order = OrderEntry()
         order.user_id = current_user.id
         order_description_strings = [
             f"Название: {entry['product_name']}, Количетсво: {entry['count']}, Стоимость: {entry['total_price']} у.е."
-            for entry in card_entries_data
+            for entry in cart_entries_data
         ]
-        order_description_strings.append(f"Общая стоимость: {total_card_price} у.е.")
+        order_description_strings.append(f"Общая стоимость: {total_cart_price} у.е.")
         order_description_strings.append(f"Адресс доставки: {form.address.data}")
         order_description_strings.append(f"Комментарий к заказу: {form.comment.data}")
 
         order.description = "\n".join(order_description_strings)
         session.add(order)
 
-        for card_entry in session.query(CardEntry).filter(CardEntry.user_id == current_user.id):
-            session.delete(card_entry)
+        for cart_entry in session.query(CartEntry).filter(CartEntry.user_id == current_user.id):
+            session.delete(cart_entry)
 
         session.commit()
-        return redirect("/to_card")
+        return redirect("/to_cart")
 
 
 @app.route("/order_description/<int:order_id>")
@@ -395,19 +395,19 @@ def product_page(product_id):
     if current_user.is_authenticated and reviews.filter(Review.user_id == current_user.id).first():
         is_user_review_exists = True
 
-    is_in_user_card = False
+    is_in_user_cart = False
     if current_user.is_authenticated:
-        card_entry = session.query(CardEntry).filter(
-            CardEntry.product_id == product_id,
-            CardEntry.user_id == current_user.id).first()
-        if card_entry:
-            is_in_user_card = True
+        cart_entry = session.query(CartEntry).filter(
+            CartEntry.product_id == product_id,
+            CartEntry.user_id == current_user.id).first()
+        if cart_entry:
+            is_in_user_cart = True
 
     return render_template('product.html', product=product,
                            category_name=category_name, seller_name=seller_name,
                            user=current_user, reviews=reviews,
                            is_user_review_exists=is_user_review_exists,
-                           is_in_user_card=is_in_user_card,
+                           is_in_user_cart=is_in_user_cart,
                            reviews_users_names=reviews_users_names)
 
 
@@ -619,8 +619,8 @@ def add_temp_data():
 
 
 def generate_routes():
-    api.add_resource(CardEntryResource, '/api/card_entries/<int:user_id>/<int:product_id>')
-    api.add_resource(CardEntryListResource, '/api/card_entries')
+    api.add_resource(CartEntryResource, '/api/cart_entries/<int:user_id>/<int:product_id>')
+    api.add_resource(CartEntryListResource, '/api/cart_entries')
     api.add_resource(CategoryResource, '/api/categories/<int:category_id>')
     api.add_resource(CategoryListResource, '/api/categories')
     api.add_resource(OrderEntryResource, '/api/order_entries/<int:order_id>')

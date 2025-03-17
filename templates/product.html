@@ -32,10 +32,10 @@
                         <p>Характеристики: <span style="color: blue">{{ product.specifications }}</span></p>
                         <p>Акция: <span style="color: green">{{ product.promo }}</span></p>
                         <p class="card-text"><strong>Цена: {{ product.price }} у.е.</strong></p>
-                        {% if is_in_user_card %}
-                        <a href="/user_card/{{ current_user.id }}" class="btn btn-success">Переидти в корзину</a>
+                        {% if is_in_user_cart %}
+                        <a href="/user_cart/{{ current_user.id }}" class="btn btn-success">Переидти в корзину</a>
                         {% else %}
-                        <a href="/add_to_user_card/{{ product.id }}" class="btn btn-success">Добавить в корзину</a>
+                        <a href="/add_to_user_cart/{{ product.id }}" class="btn btn-success">Добавить в корзину</a>
                         {% endif %}
                         {% if current_user.is_authenticated and current_user.id == product.user_id %}
                         <a href="/edit_product/{{ product.id }}" class="btn btn-primary">Редактировать</a>

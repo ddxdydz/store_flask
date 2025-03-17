@@ -1,4 +1,4 @@
-from api.card_entry_resources import CardEntryResource, CardEntryListResource
+from api.cart_entry_resources import CartEntryResource, CartEntryListResource
 from api.category_resources import CategoryResource, CategoryListResource
 from api.order_resources import OrderEntryResource, OrderEntryListResource
 from api.product_resources import ProductResource, ProductListResource

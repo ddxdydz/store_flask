@@ -5,7 +5,7 @@ BASE_URL = 'http://127.0.0.1:8000/api/check_authorization_data'
 
 
 def correct_login_test():
-    response1 = requests.get(
+    response1 = requests.post(
         BASE_URL,
         headers=API_KEY, json={"email": "user1@mail.ru", "password": "pw"}
     )
@@ -16,7 +16,7 @@ def correct_login_test():
 
 
 def wrong_login_test():
-    response1 = requests.get(
+    response1 = requests.post(
         BASE_URL,
         headers=API_KEY, json={"email": "user1@mail.ru", "password": "pw11"}
     )
