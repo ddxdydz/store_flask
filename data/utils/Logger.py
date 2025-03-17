@@ -51,4 +51,4 @@ def redirect(*args, **kwargs):
 
 
 # check_api: from data.utils.Logger import logger   logger.log_request(request)
-# main: from api.Logger import *
+# main: from data.utils.Logger import *
