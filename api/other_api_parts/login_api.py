@@ -16,6 +16,7 @@ def check_authorization_data():
         return jsonify({'error': 'Bad request'})
     session = db_session.create_session()
     user = session.query(User).filter(User.email == request.json['email']).first()
+    user_id = user.id if user else -1
     if user and user.check_password(request.json['password']):
-        return jsonify({'user_id': user.id, 'result': True})
-    return jsonify({'user_id': user.id, 'result': False})
+        return jsonify({'user_id': user_id, 'result': True})
+    return jsonify({'user_id': user_id, 'result': False})
