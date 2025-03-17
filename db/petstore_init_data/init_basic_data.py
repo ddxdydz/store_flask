@@ -24,12 +24,14 @@ def init_basic_data():  # launch at main1.py by import
         role = Role()
         role.role = role_name
         session.add(role)
+
     for category in session.query(Category).all():
         session.delete(category)
     for category_name in CATEGORIES:
         category = Category()
         category.name = category_name
         session.add(category)
+
     for product in session.query(Product).all():
         session.delete(product)
     for product_entry in PRODUCTS:
@@ -45,6 +47,7 @@ def init_basic_data():  # launch at main1.py by import
         product.promo = product_entry[7]
         product.price = product_entry[8]
         session.add(product)
+
     for user in session.query(User).all():
         session.delete(user)
     for user_data in USERS:
