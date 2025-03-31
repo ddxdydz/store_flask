@@ -48,13 +48,13 @@ class UserResource(Resource):
         if args['password']:
             user.set_password(args['password'])
         if args['role_id']:
-            user.title = args['role_id']
+            user.role_id = args['role_id']
         if args['balance']:
-            user.title = args['balance']
+            user.balance = args['balance']
         if args['about']:
-            user.title = args['about']
+            user.about = args['about']
         if args['profile_img_path']:
-            user.title = args['profile_img_path']
+            user.profile_img_path = args['profile_img_path']
 
         session.commit()
         return jsonify({'success': 'OK'})
