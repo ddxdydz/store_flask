@@ -41,13 +41,7 @@ class CartEntryResource(Resource):
         args = parser.parse_args()
         cart_entry = session.query(CartEntry).get((user_id, product_id))
 
-        count = int(args['count'])
-        if count == -1:
-            cart_entry.count -= 1
-        elif count:
-            cart_entry.count += count
-        else:
-            cart_entry.count += 1
+        cart_entry.count = int(args['count'])
 
         session.commit()
         return jsonify({'success': 'OK'})
