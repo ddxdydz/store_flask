@@ -39,8 +39,8 @@ def init_basic_data():  # launch at main1.py by import
         product.user_id = product_entry[0]
         product.category_id = product_entry[1]
         product.name = product_entry[2]
-        # if product_entry[3]:
-        #     product.profile_img_path = product_entry[3]
+        if product_entry[3]:
+            product.profile_img_path = product_entry[3]
         product.short_description = product_entry[4]
         product.long_description = product_entry[5]
         product.specifications = product_entry[6]

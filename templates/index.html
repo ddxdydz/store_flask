@@ -1,54 +1,191 @@
 {% extends 'base.html' %}
 
+{% block styles %}
+<style>
+    /* Стили для хедера с фоновым изображением */
+    .header-bg-image {
+        background-image: url('/static/imgs/header3.jpg');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        position: relative;
+        z-index: 1; /* Чтобы содержимое было поверх оверлея */
+        color: white; /* Цвет текста для хедера */
+        padding-top: 8rem; /* Отступы для содержимого хедера */
+        padding-bottom: 8rem;
+    }
+
+    /* Полупрозрачный темный оверлей для лучшей читаемости текста на картинке */
+    .header-bg-image::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Черный цвет с прозрачностью 50% */
+        z-index: -1; /* Помещаем оверлей под содержимое хедера */
+    }
+
+    /* Дополнительные стили для карточек товаров */
+    .product-card {
+        border: none; /* Убираем стандартную рамку Bootstrap */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Добавляем мягкую тень */
+        transition: transform 0.2s ease-in-out; /* Анимация при наведении */
+        height: 100%; /* Карточки будут одинаковой высоты */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px); /* Приподнимаем карточку при наведении */
+    }
+
+    .product-card .card-img-top {
+        width: 100%;
+        height: 200px; /* Фиксированная высота для изображений */
+        object-fit: cover; /* Обрезает изображение, чтобы оно заполняло область */
+        border-top-left-radius: .25rem; /* Скругление углов как у .card */
+        border-top-right-radius: .25rem;
+    }
+
+    .product-card .card-body {
+        flex-grow: 1; /* Позволяет body заполнять оставшееся пространство */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Распределяет содержимое внутри body */
+    }
+
+    .product-card .card-footer {
+        background-color: transparent;
+        border-top: none;
+        padding-top: 0;
+    }
+
+    /* Стиль для футера */
+    footer {
+        background-color: #343a40; /* Темный фон как у bg-dark */
+        color: #f8f9fa; /* Светлый текст */
+        padding: 2rem 0; /* Отступы сверху и снизу */
+    }
+
+    /* Стиль для выпадающего списка категорий */
+    .category-filter-container {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Центрируем фильтр */
+    }
+    .category-filter-container .form-select {
+        max-width: 250px; /* Ограничиваем ширину выпадающего списка */
+    }
+</style>
+{% endblock %}
 {% block content %}
-    <div class="container">
-        <!-- Заголовок с картинкой -->
-        <header class="my-4">
-            <img src="{{ url_for('static', filename='imgs/header.jpg') }}" class="img-fluid" alt="Заголовок магазина">
-        </header>
+<!-- Заголовок с картинкой -->
+<!-- Header с картинкой и названием -->
+<header class="header-bg-image text-center">
+    <div class="container px-4 px-lg-5 my-5">
+        <h1 class="display-4 fw-bolder">Интернет-магазин зоотоваров</h1>
+        {% if current_user.is_authenticated %}
+        {% if current_user.role_id == 1 %}
+        <p class="lead fw-normal mb-0">Вы вошли как администратор!</p>
+        {% else %}
+        <p class="lead fw-normal mb-0">Вы вошли как обычный пользователь!</p>
+        {% endif %}
+        {% else %}
+        <p class="lead fw-normal mb-0">Вы не вошли на сайт!</p>
+        {% endif %}
+    </div>
+</header>
 
-        <div class="row">
-            <!-- Каталог товаров слева -->
-            <div class="col-md-3">
-                <h4>Категории</h4>
-                <ul class="list-group">
-                    {% set loop_iteration_count = namespace(value=0) %}
-                    {% for category_name in all_category_names %}
-                    <li class="list-group-item">
-                        <a href="/categories/{{ loop_iteration_count.value }}">
-                            {% if loop_iteration_count.value == category_id %}
-                            <span style="color: red">{{ category_name }}</span>
-                            {% else %}
-                            {{ category_name }}
-                            {% endif %}
-                            {% set loop_iteration_count.value = loop_iteration_count.value + 1 %}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
+<!-- Секция каталога товаров -->
+<section class="py-5" style="padding-top: 0rem !important;">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="fw-bolder text-center mb-5">Наши товары по категориям</h2>
+        <!-- Секция для фильтрации по категориям -->
+        <div class="category-filter-container">
+            <label for="categoryFilter" class="form-label me-2 mb-0">Показать товары из категории:</label>
+            <select class="form-select" id="categoryFilter" aria-label="Фильтр по категории товаров"
+                    style="min-width: 300px">
+                {% set loop_iteration_count = namespace(value=0) %}
+                {% for category_name in all_category_names %}
+                {% if loop_iteration_count.value == category_id %}
+                <option selected class="dropdown-item" value="{{ loop_iteration_count.value }}"
+                        data-value="{{ loop_iteration_count.value }}">{{ category_name }}
+                </option>
+                {% else %}
+                <option class="dropdown-item" value="{{ loop_iteration_count.value }}"
+                        data-value="{{ loop_iteration_count.value }}">{{ category_name }}
+                </option>
+                {% endif %}
+                {% set loop_iteration_count.value = loop_iteration_count.value + 1 %}
+                {% endfor %}
+            </select>
+        </div>
 
-            <!-- Карточки товаров -->
-            <div class="col-md-9">
-                <h4>Товары</h4>
-                <div class="row">
-                    {% for product in products %}
-                        <div class="col-md-4 mb-4">
-                            <div class="card">
-                                <img src="/{{ product.profile_img_path }}" class="card-img-top" alt="{{ product.name }}" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ product.name }}</h5>
-                                    <h6 class="card-text">Категория: <span style="color: blue">{{ all_category_names[product.category_id] }}</span></h6>
-                                    <h6 class="card-text">Краткое описание: <span style="color: blue">{{ product.short_description }}</span></h6>
-                                    <h6 class="card-text">Акция: <span style="color: green">{{ product.promo }}</span></h6>
-                                    <h6 class="card-text"><strong>Цена: {{ product.price }} у.е.</strong></h6>
-                                    <a href="/product/{{ product.id }}" class="btn btn-primary">Подробнее</a>
-                                </div>
-                            </div>
+        <!-- Контейнер для карточек товаров -->
+        <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 justify-content-center">
+            {% for product in paginated_products %}
+            <div class="col mb-5 product-card-item">
+                <div class="card product-card">
+                    <img src="/{{ product.profile_img_path }}" class="card-img-top" alt="{{ product.name }}"
+                         onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder">{{ product.name }}</h5>
+                            <h7 class="card-text">Категория: <span style="color: gray">{{ all_category_names[product.category_id] }}</span>
+                            </h7>
+                            <p class="text-decoration text-muted mb-0"><span style="color: green">Цена: {{ product.price }} у.е.</span>
+                            </p>
                         </div>
-                    {% endfor %}
+                    </div>
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                                                    href="/product/{{ product.id }}">Подробнее</a></div>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
+
+        {% if total_pages != 1 %}
+        <div class="pagination justify-content-center mt-4">
+            {% if current_page > 1 %}
+            <a class="btn btn-outline-dark" href="?page={{ current_page - 1 }}">Назад</a>
+            {% endif %}
+
+            {% for page in range(1, total_pages + 1) %}
+            <a class="btn btn-outline-dark mx-1 {% if page == current_page %}active{% endif %}" href="?page={{ page }}">{{
+                page }}</a>
+            {% endfor %}
+
+            {% if current_page < total_pages %}
+            <a class="btn btn-outline-dark" href="?page={{ current_page + 1 }}">Вперед</a>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
+</section>
+
+<!-- Футер -->
+<footer class="py-5">
+    <div class="container">
+        <p class="m-0 text-center text-white">Интернет-магазин зоотоваров</p>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('categoryFilter').addEventListener('change', function() {
+        const selectedValue = this.value;
+
+        // Формируем новый URL
+        let newUrl;
+        if (selectedValue) {
+            newUrl = "/categories/" + this.value; // URL для конкретной категории
+            // Переадресация на новый URL
+            window.location.href = newUrl;
+        }
+    });
+</script>
 {% endblock %}

@@ -1,48 +1,133 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="margin: 10%;margin-top: 1%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px;">
+<div style="margin: auto;margin-top: 3%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px; max-width: 760px">
     <style>
+        /* Основной контейнер для каждого элемента корзины */
         .cart-item {
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; /* Делает элементы внутри него гибкими */
+            align-items: center; /* Выравнивает элементы по центру по вертикали */
+            justify-content: space-between; /* Распределяет пространство: product-info (слева) и controls (справа) */
+            border-bottom: 1px solid #eee; /* Разделитель между товарами */
+            padding: 15px 0; /* Внутренние отступы сверху и снизу */
+            /* Дополнительные стили, если вы не используете Bootstrap классы для рамки/отступов */
+            /* border: 1px solid #dee2e6; */
+            /* padding: 1rem; */
+            /* margin-bottom: 1rem; */
+            /* border-radius: 0.25rem; */
         }
-        .cart-item img {
-            max-width: 50px;
-            height: auto;
-            margin-right: 10px;
+
+        /* Левая часть: информация о продукте (изображение и название) */
+        .product-info {
+            display: flex; /* Делает изображение и текст гибкими элементами */
+            align-items: center; /* Выравнивает изображение и текст по центру по вертикали */
+            flex-shrink: 0; /* Запрещает этому блоку сжиматься, если мало места */
+            min-width: 150px; /* Минимальная ширина для блока информации о продукте */
+            max-width: 50%; /* Ограничивает максимальную ширину, чтобы оставить место для правых элементов */
+            /* flex-grow: 1; */ /* Можно использовать, чтобы product-info "растягивался" и отталкивал controls дальше.
+                                 В сочетании с justify-content: space-between на родителе часто не нужен. */
         }
+
+        .product-info img {
+            width: 30px; /* Фиксированная ширина для изображения */
+            height: 30px; /* Фиксированная высота для изображения */
+            object-fit: cover; /* Обрезка изображения для заполнения блока */
+            margin-right: 15px; /* Отступ справа от изображения до названия */
+            border-radius: 5px; /* Скругление углов изображения */
+        }
+
+        .product-info a {
+            overflow: hidden; /* Скрывает содержимое, которое выходит за границы */
+            text-overflow: ellipsis; /* Добавляет многоточие для обрезанного текста */
+            white-space: nowrap; /* Запрещает перенос текста на новую строку */
+        }
+
+        /* Правая часть: контроль количества, стоимость, кнопка удаления */
+        .controls {
+            display: flex; /* Делает элементы внутри controls гибкими */
+            align-items: center; /* Выравнивает элементы по центру по вертикали */
+            flex-shrink: 0; /* Запрещает этому блоку сжиматься, если мало места */
+            gap: 20px; /* Промежуток между элементами (quantity-control, item-price, кнопка удаления) */
+        }
+
+        /* Контроль количества (кнопки - и +) */
         .quantity-control {
-            display: flex;
-            align-items: center;
+            display: flex; /* Делает кнопки и число гибкими элементами */
+            align-items: center; /* Выравнивает их по центру по вертикали */
+            flex-shrink: 0; /* Запрещаем этому блоку сжиматься */
         }
+
         .quantity-control a {
-            margin: 0 5px;
+            /* Bootstrap классы btn btn-sm btn-secondary уже дают базовые стили */
+            /* Добавим отступы, если Bootstrap классы (me-1, ms-1) не используются */
+            margin: 0 5px; /* Отступы вокруг кнопок + и - от числа */
         }
+
+
+        /* Стоимость */
+        .item-price {
+            white-space: nowrap; /* Запрещаем перенос текста стоимости */
+            flex-shrink: 0; /* Запрещаем этому блоку сжиматься */
+        }
+
+        /* Кнопка удаления */
+        /* Используем более специфичный селектор, чтобы не затронуть другие кнопки */
+        .controls .btn-danger {
+            flex-shrink: 0; /* Запрещаем этому блоку сжиматься */
+        }
+
+        /* Адаптивность для маленьких экранов (телефонов) */
+        @media (max-width: 768px) {
+            .cart-item {
+                flex-direction: column; /* Элементы располагаются по вертикали */
+                align-items: flex-start; /* Выравниваем содержимое по левому краю */
+                padding: 15px; /* Увеличим отступы со всех сторон */
+        }
+        .product-info {
+            max-width: 100%; /* Занимает всю ширину */
+            margin-bottom: 10px; /* Отступ между блоком продукта и блоком контроля */
+        }
+        .controls {
+            width: 100%; /* Занимает всю ширину */
+            justify-content: space-between; /* Распределяем элементы по ширине */
+            gap: 10px; /* Уменьшаем отступ между элементами контроля */
+        }
+    }
     </style>
     <div class="container">
         <h1>Ваша корзина</h1>
         <div class="cart-items">
             {% for cart_entry_data in cart_entries_data %}
             <div class="cart-item">
-                <div>
-                    <img src="/{{ cart_entry_data['profile_img_path'] }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Image" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
+                <div class="product-info">
+                    <img src="/{{ cart_entry_data['profile_img_path'] }}"
+                         style="width: 50px; height: 100%; object-fit: cover;" alt="Image"
+                         onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
                     <a href="/product/{{ cart_entry_data['product_id'] }}">
                         <span>{{ cart_entry_data["product_name"] }}</span>
                     </a>
                 </div>
-                <div class="quantity-control">
-                    <a class="btn btn-sm btn-secondary" href="/remove_from_user_cart/{{ cart_entry_data['product_id'] }}">-</a>
-                    <span class="quantity">{{ cart_entry_data["count"] }}</span>
-                    <a class="btn btn-sm btn-secondary" href="/add_to_user_cart/{{ cart_entry_data['product_id'] }}">+</a>
+                <div class="controls">
+                    <div class="quantity-control">
+                        <a class="btn btn-sm btn-secondary"
+                           href="/remove_from_user_cart/{{ cart_entry_data['product_id'] }}">-</a>
+                        <span class="quantity">{{ cart_entry_data["count"] }}</span>
+                        <a class="btn btn-sm btn-secondary"
+                           href="/add_to_user_cart/{{ cart_entry_data['product_id'] }}">+</a>
+                    </div>
+                    <span class="item-price">Стоимость: {{ cart_entry_data["total_price"] }} у.е.</span>
+                    <a class="btn btn-sm btn-danger"
+                       href="/delete_from_user_cart/{{ cart_entry_data['product_id'] }}"><i class="bi bi-trash"></i></a>
                 </div>
-                <span class="item-price">Стоимость: {{ cart_entry_data["total_price"] }} у.е.</span>
             </div>
             {% else %}
+            <br>
+            <br>
             <p>Ваша корзина пуста.</p>
+            <br>
+            <br>
+            <a class="btn btn-outline-success" href="/"
+               style="width: 100%; margin-top: 1.5%; margin-left: 1%;">На главную</a>
             {% endfor %}
         </div>
         <div class="total">

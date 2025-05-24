@@ -94,16 +94,51 @@ def categories(category_id):
     if category_id == 0:
         products = session.query(Product).all()
     else:
-        products = session.query(Product).filter(Product.category_id == category_id)
+        products = session.query(Product).filter(Product.category_id == category_id).all()
+
+    page_size = 8
+    current_page = request.args.get('page', 1, type=int)
+
+    total_products = len(products)
+    total_pages = (total_products // page_size) + (1 if total_products % page_size > 0 else 0)
+
+    start_index = (current_page - 1) * page_size
+    end_index = start_index + page_size
+
+    paginated_products = products[start_index:end_index]
+
     return render_template('index.html', category_id=category_id,
-                           products=products, all_category_names=all_category_names)
+                           products=products, all_category_names=all_category_names,
+                           current_page=current_page, total_pages=total_pages, paginated_products=paginated_products)
 
 
 @app.route("/search_products", methods=['GET', 'POST'])
 def search_products():
     form = ProductSearchForm()
     session = db_session.create_session()
-    search_request = str(form.search.data).lower() if form.search.data else ''
+
+    # Инициализируем переменные для текущих значений поиска
+    current_search_query = ''
+    current_category_filter = '0'  # По умолчанию "Все"
+
+    is_submit = False
+
+    if request.method == 'POST':
+        # Если форма отправлена POST-запросом, берем данные из формы
+        if form.validate_on_submit():
+            current_search_query = str(form.search.data).lower() if form.search.data else ''
+            current_category_filter = str(form.category.data) if form.category.data else '0'
+            is_submit = True
+    elif request.method == 'GET':
+        # Если это GET-запрос (например, после перехода по пагинации),
+        # берем данные из URL-параметров
+        current_search_query = request.args.get('search', '').lower()
+        current_category_filter = request.args.get('category', '0')
+
+    # Устанавливаем значения формы для отображения в шаблоне
+    # Это важно, чтобы форма показывала текущие параметры поиска
+    form.search.data = current_search_query
+    form.category.data = current_category_filter
 
     # sqlalchemy.func.lower не работает с кириллицей
     # products = session.query(Product).filter(func.lower(Product.name).like(f'%{search_request}%'))
@@ -115,31 +150,85 @@ def search_products():
 
     filtered_products = [
         product for product in products
-        if search_request.lower() in product.name.lower()
+        if current_search_query.lower() in product.name.lower()
     ]
 
+    page_size = 4
+    current_page = 1 if is_submit else request.args.get('page', 1, type=int)
+
+    total_products = len(filtered_products)
+    total_pages = (total_products // page_size) + (1 if total_products % page_size > 0 else 0)
+
+    start_index = (current_page - 1) * page_size
+    end_index = start_index + page_size
+
+    paginated_products = filtered_products[start_index:end_index]
+
     return render_template('product_search.html', form=form,
-                           products=filtered_products, all_category_names=all_category_names)
+                           all_category_names=all_category_names,
+                           current_page=current_page,
+                           total_pages=total_pages,
+                           paginated_products=paginated_products,
+                           current_search_query=current_search_query,
+                           current_category_filter=current_category_filter)
 
 
 @app.route("/search_users", methods=['GET', 'POST'])
 def search_users():
     form = UserSearchForm()
     session = db_session.create_session()
-    search_request = str(form.search.data).lower() if form.search.data else ''
 
-    if form.role.data and int(form.role.data):
-        users = session.query(User).filter(User.role_id == int(form.role.data))
+    # Инициализируем переменные для текущих значений поиска
+    current_search_query = ''
+    current_role_filter = '0'  # По умолчанию "Все"
+
+    is_submit = False
+
+    if request.method == 'POST':
+        # Если форма отправлена POST-запросом, берем данные из формы
+        if form.validate_on_submit():
+            current_search_query = str(form.search.data).lower() if form.search.data else ''
+            current_role_filter = str(form.role.data) if form.role.data else '0'
+            is_submit = True
+    elif request.method == 'GET':
+        # Если это GET-запрос (например, после перехода по пагинации),
+        # берем данные из URL-параметров
+        current_search_query = request.args.get('search', '').lower()
+        current_role_filter = request.args.get('role', '0')
+
+    # Устанавливаем значения формы для отображения в шаблоне
+    # Это важно, чтобы форма показывала текущие параметры поиска
+    form.search.data = current_search_query
+    form.role.data = current_role_filter
+
+    # Фильтрация пользователей на основе полученных параметров
+    if current_role_filter and int(current_role_filter) > 0:  # '0' означает "Все"
+        users = session.query(User).filter(User.role_id == int(current_role_filter)).all()
     else:
         users = session.query(User).all()
 
     filtered_users = [
         user for user in users
-        if search_request in user.email.lower() or search_request in user.name.lower()
+        if current_search_query in user.email.lower() or current_search_query in user.name.lower()
     ]
 
+    page_size = 6
+    current_page = 1 if is_submit else request.args.get('page', 1, type=int)
+
+    total_users = len(filtered_users)
+    total_pages = (total_users // page_size) + (1 if total_users % page_size > 0 else 0)
+
+    start_index = (current_page - 1) * page_size
+    end_index = start_index + page_size
+
+    paginated_users = filtered_users[start_index:end_index]
+
     return render_template('user_search.html', form=form,
-                           users=filtered_users)
+                           current_page=current_page,
+                           total_pages=total_pages,
+                           paginated_users=paginated_users,
+                           current_search_query=current_search_query,
+                           current_role_filter=current_role_filter)
 
 
 @app.route("/user_page")
@@ -291,6 +380,21 @@ def add_to_user_cart(product_id):
     return redirect(f"/user_cart/{current_user.id}")
 
 
+@app.route("/delete_from_user_cart/<int:product_id>", methods=['GET', 'POST'])
+def delete_from_user_cart(product_id):
+    if not current_user.is_authenticated:
+        return redirect("/register")
+
+    session = db_session.create_session()
+    cart_entry = session.query(CartEntry).filter(
+        CartEntry.product_id == product_id,
+        CartEntry.user_id == current_user.id).first()
+    session.delete(cart_entry)
+    session.commit()
+
+    return redirect(f"/user_cart/{current_user.id}")
+
+
 @app.route("/remove_from_user_cart/<int:product_id>", methods=['GET', 'POST'])
 def remove_from_user_cart(product_id):
     if not current_user.is_authenticated:
@@ -317,7 +421,7 @@ def user_orders():
         return redirect("/register")
     session = db_session.create_session()
     orders = session.query(OrderEntry).filter(OrderEntry.user_id == current_user.id)
-    return render_template('orders.html', orders=orders)
+    return render_template('orders.html', orders=orders, orders_count=orders.count())
 
 
 @app.route("/do_order", methods=['GET', 'POST'])

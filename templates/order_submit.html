@@ -9,26 +9,29 @@
         <p>
             {{ form.address(class="form-control") }}
             {% for error in form.address.errors %}
-            <p class="alert alert-danger" role="alert">{{ error }}</p>
-            {% endfor %}
+        <p class="alert alert-danger" role="alert">{{ error }}</p>
+        {% endfor %}
         </p>
         <h5>{{ form.comment.label }}</h5>
         <p>
             {{ form.comment(class="form-control") }}
             {% for error in form.comment.errors %}
-            <p class="alert alert-danger" role="alert">{{ error }}</p>
-            {% endfor %}
+        <p class="alert alert-danger" role="alert">{{ error }}</p>
+        {% endfor %}
         </p>
         <div>
             <h5>Содержимое заказа:</h5>
             {% for cart_entry_data in cart_entries_data %}
-            <p>- {{ cart_entry_data["product_name"] }}, Количество: {{ cart_entry_data["count"] }} шт., Стоимость: {{ cart_entry_data["total_price"] }} у.е.</p>
+            <p>- {{ cart_entry_data["product_name"] }}, Количество: {{ cart_entry_data["count"] }} шт., Стоимость: {{
+                cart_entry_data["total_price"] }} у.е.</p>
             {% endfor %}
             <h5>Общая стоимость: </h5>
             <p>{{ total_cart_price }} у.е.</p>
         </div>
-        <p>{{ form.submit(type="submit", class="btn btn-primary", style="width: 49.5%; margin-top: 1.5%; float: left;") }}
-        <a class="btn btn-outline-success" href="/user_cart/{{ current_user.id }}" style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", style="width: 49.5%; margin-top: 1.5%; float: left;")
+            }}
+            <a class="btn btn-outline-success" href="/user_cart/{{ current_user.id }}"
+               style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
         {{message}}
     </form>
 </div>

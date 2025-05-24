@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div style="margin: 10%;margin-top: 1%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px;">
+<div style="margin: auto;margin-top: 1%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px; max-width: 800px">
     <h2 style="text-align: center;">Поиск товаров</h2>
     <form action="" method="post">
         {{ form.hidden_tag() }}
@@ -10,59 +10,93 @@
                     <h6>{{ form.search.label }}</h6>
                     {{ form.search(class="form-control", placeholder="Введите поисковый запрос") }}
                     {% for error in form.search.errors %}
-                        <p class="alert alert-danger" role="alert">
-                            {{ error }}
-                        </p>
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
                     {% endfor %}
                 </div>
                 <div class="col-2">
                     <h6 style="color:#F7F8FA">j</h6>
                     {{ form.submit(type="submit", class="btn btn-primary", style="width: 100%;") }}
                 </div>
-            </div><br>
+            </div>
+            <br>
             <div class="row">
                 <div class="col">
                     <h6>{{ form.category.label }}</h6>
                     {{ form.category(class="form-control") }}<br>
-                        {% for error in form.category.errors %}
-                            <p class="alert alert-danger" role="alert">
-                                {{ error }}
-                            </p>
+                    {% for error in form.category.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
                     {% endfor %}
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <div class="list-group">
-                        {% for product in products %}
+                        {% for product in paginated_products %}
                         <a href="/product/{{ product.id }}" class="list-group-item list-group-item-action">
                             <div style="font-size: 17px;line-height: 24px;font-weight: 400;font-family: Helvetica,Arial,sans-serif;color: #333;word-break: break-word;">
-                                <img src="/{{ product.profile_img_path }}" class="rounded float-start" alt="{{ product.name }}"  onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
+                                <img src="/{{ product.profile_img_path }}" class="rounded float-start"
+                                     alt="{{ product.name }}" style="max-width: 200px"
+                                     onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
                                 <h5 style="text-indent: 6px" class="card-title"><strong>{{ product.name }}</strong></h5>
-                                <p style="text-indent: 6px">Категория: <span style="color: blue">{{ all_category_names[product.category_id] }}</span></p>
-                                <p style="text-indent: 6px">Краткое описание: <span style="color: blue">{{ product.short_description }}</span></p>
-                                <p style="text-indent: 6px">Акция: <span style="color: green">{{ product.promo }}</span></p>
-                                <p style="text-indent: 6px" class="card-text"><strong>Цена: {{ product.price }} у.е.</strong></p>
+                                <p style="text-indent: 6px">Категория: <span style="color: blue">{{ all_category_names[product.category_id] }}</span>
+                                </p>
+                                <p style="text-indent: 6px">Краткое описание: <span style="color: blue">{{ product.short_description }}</span>
+                                </p>
+                                <p style="text-indent: 6px">Акция: <span style="color: green">{{ product.promo }}</span>
+                                </p>
+                                <p style="text-indent: 6px" class="card-text"><strong>Цена: {{ product.price }}
+                                    у.е.</strong></p>
                             </div>
                         </a>
                         <br>
+                        {% else %}
+                        <br>
+                        <br>
+                        <div class="d-flex justify-content-center align-items-center" style="height: 2vh;">
+                            <p>Ничего не найдено.</p>
+                        </div>
                         {% endfor %}
                     </div>
                 </div>
-            </div><br>
-            <div class="row">
-                <div class="col">
-                    <a class="btn btn-outline-secondary" href="/search_products" style="width:100%;">
-                        Предыдущая (0)
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="btn btn-outline-primary" href="/search_products" style="width:100%;">
-                        Следующая (0)
-                    </a>
-                </div>
             </div>
+            {% if total_pages != 1 %}
+            <div class="pagination justify-content-center mt-4">
+                {% set base_url = request.path %}
+                {% set query_params = [] %}
+                {% if current_search_query %}
+                {% set _ = query_params.append('search=' + current_search_query) %}
+                {% endif %}
+                {% if current_category_filter and current_category_filter != '0' %}
+                {% set _ = query_params.append('category=' + current_category_filter) %}
+                {% endif %}
+
+                {% set existing_params_str = '&'.join(query_params) %}
+                {% set separator = '?' if not existing_params_str else '&' %}
+
+                {% if current_page > 1 %}
+                <a class="btn btn-outline-dark"
+                   href="{{ base_url }}?page={{ current_page - 1 }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}">Назад</a>
+                {% endif %}
+
+                {% for page in range(1, total_pages + 1) %}
+                <a class="btn btn-outline-dark mx-1 {% if page == current_page %}active{% endif %}"
+                   href="{{ base_url }}?page={{ page }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}">{{
+                    page }}</a>
+                {% endfor %}
+
+                {% if current_page < total_pages %}
+                <a class="btn btn-outline-dark"
+                   href="{{ base_url }}?page={{ current_page + 1 }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}">Вперед</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            <br>
         </div>
     </form>
 </div>
+<br>
 {% endblock %}

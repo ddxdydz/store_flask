@@ -1,94 +1,100 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container mt-5">
-        <!-- Информация о товаре -->
-        <div class="card mb-3">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="/{{ product.profile_img_path }}" style="width: 100%; height: 100%; object-fit: cover;" alt="{{ product.name }}" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h3 class="card-title">Название товара: {{ product.name }}</h3>
-                        <p class="card-text"><small class="text-body-secondary">Создан: {{ product.time.strftime("%Y-%m-%d %H:%M") }}</small></p>
-                        <p class="card-text"><small class="text-body-secondary">Последнее обновление: {{ product.last_edit_time.strftime("%Y-%m-%d %H:%M") }}</small></p>
-                        <div>
-                            <p>Категория:
-                                <a href="/categories/{{ product.category_id }}">
-                                    <span>{{ category_name }}</span>
-                                </a>
-                            </p>
-                        </div>
-                        <div>
-                            <p>Продавец:
-                                <a href="/profile/{{ product.user_id }}">
-                                    <span>{{ seller_name }}</span>
-                                </a>
-                            </p>
-                        </div>
-                        <p>Краткое описание: <span style="color: blue">{{ product.short_description }}</span></p>
-                        <p>Подробное описание: <span style="color: blue">{{ product.long_description }}</span></p>
-                        <p>Характеристики: <span style="color: blue">{{ product.specifications }}</span></p>
-                        <p>Акция: <span style="color: green">{{ product.promo }}</span></p>
-                        <p class="card-text"><strong>Цена: {{ product.price }} у.е.</strong></p>
-                        {% if is_in_user_cart %}
-                        <a href="/user_cart/{{ current_user.id }}" class="btn btn-success">Перейти в корзину</a>
-                        {% else %}
-                        <a href="/add_to_user_cart/{{ product.id }}" class="btn btn-success">Добавить в корзину</a>
-                        {% endif %}
-                        {% if current_user.is_authenticated and current_user.id == product.user_id %}
-                        <a href="/edit_product/{{ product.id }}" class="btn btn-primary">Редактировать</a>
-                        <a href="/delete_product/{{ product.id }}" class="btn btn-danger">Удалить</a>
-                        {% endif %}
-                    </div>
-                </div>
+<div class="container mt-5">
+    <!-- Информация о товаре -->
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="/{{ product.profile_img_path }}" style="width: 100%; height: 100%; object-fit: cover;"
+                     alt="{{ product.name }}" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
             </div>
-        </div>
-
-        <!-- Добавление отзыва -->
-        <h3>Оставить отзыв</h3>
-        {% if not is_user_review_exists %}
-        <a href="/add_review/{{ product.id }}" class="btn btn-primary">Перейти на страницу добавления отзыва</a>
-        {% else %}
-        <p>Вы уже оставили отзыв.</p>
-        {% endif %}
-
-        <!-- Список отзывов -->
-        <h3>Отзывы</h3>
-        {% set loop_iteration_count = namespace(value=0) %}
-        {% for review in reviews %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-sm-10">
-                        <h5 class="card-title">
-                            Оценка пользователя
-                            <a href="/profile/{{ review.user_id }}">
-                                <span>{{ reviews_users_names[loop_iteration_count.value] }}</span>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">Название товара: {{ product.name }}</h3>
+                    <p class="card-text"><small class="text-body-secondary">Создан: {{ product.time.strftime("%Y-%m-%d
+                        %H:%M") }}</small></p>
+                    <p class="card-text"><small class="text-body-secondary">Последнее обновление: {{
+                        product.last_edit_time.strftime("%Y-%m-%d %H:%M") }}</small></p>
+                    <div>
+                        <p>Категория:
+                            <a href="/categories/{{ product.category_id }}">
+                                <span>{{ category_name }}</span>
                             </a>
-                            : {{ review.score }}/5
-                        </h5>
-                        <small class="text-muted">Создано: {{ review.time.strftime("%Y-%m-%d %H:%M") }} | Обновлено: {{ review.last_edit_time.strftime("%Y-%m-%d %H:%M") }}</small><br>
-                        <p class="card-text">Описание: {{ review.about }}</p>
-                        {% if current_user.is_authenticated and review.user_id == current_user.id %}
-                        <a href="/edit_review/{{ review.id }}" class="btn btn-warning btn-sm">Редактировать</a>
-                        <a href="/delete_review/{{ review.id }}" class="btn btn-danger btn-sm">Удалить</a>
-                        {% endif %}
+                        </p>
                     </div>
-                    <div class="col-sm">
-                        {% if review.profile_img_path %}
-                        <a href="/{{ review.profile_img_path }}" target="_blank">
-                            <img src="/{{ review.profile_img_path }}" class="img-fluid" alt="Картинка отзыва" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10%; border: 2px solid #007bff;" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
-                        </a>
-                        {% endif %}
+                    <div>
+                        <p>Продавец:
+                            <a href="/profile/{{ product.user_id }}">
+                                <span>{{ seller_name }}</span>
+                            </a>
+                        </p>
                     </div>
+                    <p>Краткое описание: <span style="color: blue">{{ product.short_description }}</span></p>
+                    <p>Подробное описание: <span style="color: blue">{{ product.long_description }}</span></p>
+                    <p>Характеристики: <span style="color: blue">{{ product.specifications }}</span></p>
+                    <p>Акция: <span style="color: green">{{ product.promo }}</span></p>
+                    <p class="card-text"><strong>Цена: {{ product.price }} у.е.</strong></p>
+                    {% if is_in_user_cart %}
+                    <a href="/user_cart/{{ current_user.id }}" class="btn btn-success">Перейти в корзину</a>
+                    {% else %}
+                    <a href="/add_to_user_cart/{{ product.id }}" class="btn btn-success">Добавить в корзину</a>
+                    {% endif %}
+                    {% if current_user.is_authenticated and current_user.id == product.user_id %}
+                    <a href="/edit_product/{{ product.id }}" class="btn btn-primary">Редактировать</a>
+                    <a href="/delete_product/{{ product.id }}" class="btn btn-danger">Удалить</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        {% set loop_iteration_count.value = loop_iteration_count.value + 1 %}
-        {% else %}
-        <p>Отзывов пока нет.</p>
-        {% endfor %}
     </div>
+
+    <!-- Добавление отзыва -->
+    <h3>Оставить отзыв</h3>
+    {% if not is_user_review_exists %}
+    <a href="/add_review/{{ product.id }}" class="btn btn-primary">Перейти на страницу добавления отзыва</a>
+    {% else %}
+    <p>Вы уже оставили отзыв.</p>
+    {% endif %}
+
+    <!-- Список отзывов -->
+    <h3>Отзывы</h3>
+    {% set loop_iteration_count = namespace(value=0) %}
+    {% for review in reviews %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-sm-10">
+                    <h5 class="card-title">
+                        Оценка пользователя
+                        <a href="/profile/{{ review.user_id }}">
+                            <span>{{ reviews_users_names[loop_iteration_count.value] }}</span>
+                        </a>
+                        : {{ review.score }}/5
+                    </h5>
+                    <small class="text-muted">Создано: {{ review.time.strftime("%Y-%m-%d %H:%M") }} | Обновлено: {{
+                        review.last_edit_time.strftime("%Y-%m-%d %H:%M") }}</small><br>
+                    <p class="card-text">Описание: {{ review.about }}</p>
+                    {% if current_user.is_authenticated and review.user_id == current_user.id %}
+                    <a href="/edit_review/{{ review.id }}" class="btn btn-warning btn-sm">Редактировать</a>
+                    <a href="/delete_review/{{ review.id }}" class="btn btn-danger btn-sm">Удалить</a>
+                    {% endif %}
+                </div>
+                <div class="col-sm">
+                    {% if review.profile_img_path %}
+                    <a href="/{{ review.profile_img_path }}" target="_blank">
+                        <img src="/{{ review.profile_img_path }}" class="img-fluid" alt="Картинка отзыва"
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 10%; border: 2px solid #007bff;"
+                             onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% set loop_iteration_count.value = loop_iteration_count.value + 1 %}
+    {% else %}
+    <p>Отзывов пока нет.</p>
+    {% endfor %}
+</div>
 {% endblock %}

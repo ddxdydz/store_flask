@@ -2,22 +2,39 @@
 
 {% block content %}
 <div style="margin: auto;margin-top: 3%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px; max-width: 600px">
-    <div class="container">
-        <h1>Ваши заказы</h1><br>
-        <div class="order-items">
-            <ul>
+
+    <div class="order-items card"> {# Класс card превращает div в карточку Bootstrap #}
+        <div class="card-header"> {# Шапка карточки #}
+            <h4 class="mb-0">Список заказов</h4> {# Заголовок внутри карточки #}
+        </div>
+
+        {% if orders_count != 0 %}
+        <ul class="list-group list-group-flush"> {# list-group для списка, list-group-flush убирает рамки между
+            элементами #}
             {% for order in orders %}
-            <li>
-                <a href="/order_description/{{ order.id }}">
-                    Заказ от {{ order.time.strftime("%Y-%m-%d %H:%M") }}
+            <li class="list-group-item"> {# Каждый элемент списка #}
+                <a href="/order_description/{{ order.id }}"
+                   class="list-group-item-action d-flex justify-content-between align-items-center py-2">
+                    {# list-group-item-action добавляет эффект наведения #}
+                    {# d-flex, justify-content-between, align-items-center для выравнивания текста слева и стрелки
+                    справа #}
+                    {# py-2 добавляет небольшой вертикальный отступ для кликабельной области #}
+                    <span class="fw-bold text-dark">
+                        Заказ от {{ order.time.strftime("%d.%m.%Y %H:%M") }} {# Изменен формат даты для более привычного вида #}
+                    </span>
+                    {# Опционально: иконка для индикации, что это ссылка #}
+                    <i class="bi bi-chevron-right text-muted"></i> {# Требует Bootstrap Icons #}
                 </a>
             </li>
-            {% else %}
-            <li>У вас нет заказов.</li>
             {% endfor %}
-            </ul>
+        </ul>
+        {% else %}
+        <div class="card-body"> {# Если заказов нет, используем card-body для стандартного отступа #}
+            <p class="text-muted mb-0">У вас нет заказов.</p> {# Стилизованный текст для сообщения #}
         </div>
-        <a class="btn btn-outline-success" href="/user_page" style="width: 100%; margin-top: 1.5%; margin-left: 1%;">Назад</a></p>
+        {% endif %}
+
     </div>
+    <a class="btn btn-outline-success" href="/user_page" style="width: 100%; margin-top: 1.5%; ">Назад</a>
 </div>
 {% endblock %}

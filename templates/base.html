@@ -2,75 +2,88 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.1, shrink-to-fit=no">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
           rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
             crossorigin="anonymous"></script>
     <style>body { background-color: #f0f0f0; }</style>
-    <link rel="shortcut icon" href='https://cdn2.iconfinder.com/data/icons/round-varieties/60/Rounded_-_High_Ultra_Colour06_-_Shopping_Bag-64.png'>
+    <link rel="shortcut icon"
+          href='https://cdn2.iconfinder.com/data/icons/round-varieties/60/Rounded_-_High_Ultra_Colour06_-_Shopping_Bag-64.png'>
     {% set base_title = "Зоомагазин" %}
     <title>{{ base_title }}</title>
+    {% block styles %}{% endblock %}
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">{{ base_title }}</a>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">{{ base_title }}</a>
 
-                <!-- toggler button for opening the menu on small screens -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <!-- toggler button for opening the menu on small screens -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <!-- Menu buttons -->
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="margin-left: auto;margin-right: auto;--bs-scroll-height: 100px;">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Каталог</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/search_products">Поиск</a>
-                        </li>
-                        {% if current_user.is_authenticated and current_user.role_id == 1 %}
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/search_users">Пользователи</a>
-                        </li>
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/user_page">Личный кабинет</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/to_cart">Корзина</a>
-                        </li>
-                    </ul>
+            <!-- Menu buttons -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
+                    style="margin-left: auto;margin-right: auto;--bs-scroll-height: 100px;">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Каталог</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/search_products">Поиск</a>
+                    </li>
+                    {% if current_user.is_authenticated and current_user.role_id == 1 %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/search_users">Пользователи</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/user_page">Личный кабинет</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/to_cart">Корзина</a>
+                    </li>
+                </ul>
 
-                    <!-- User page content -->
-                    <form class="d-flex">
-                        {% if current_user.is_authenticated %}
-                        <div class="btn-group"><div>
-                            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                              <img src="/{{ current_user.profile_img_path }}" width="22" height="22" style="border-radius: 100px;" onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
-                              {{ current_user.name }}
+                <!-- User page content -->
+                <form class="d-flex">
+                    {% if current_user.is_authenticated %}
+                    <div class="btn-group">
+                        <div>
+                            <button type="button" class="btn btn-outline-primary dropdown-toggle"
+                                    data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                <img src="/{{ current_user.profile_img_path }}" width="22" height="22"
+                                     style="border-radius: 100px;"
+                                     onerror="this.src='/static/imgs/noimg.jpg'; this.alt='noimg.jpg';">
+                                {{ current_user.name }}
                             </button>
                             <ul class="dropdown-menu dropdown-menu-lg-end">
                                 <li><a class="dropdown-item" type="button" href="/profile/{{ current_user.id }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-person-fill" viewBox="0 0 16 16">
                                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                     </svg>
                                     Профиль
                                 </a></li>
                                 <li><a class="dropdown-item" type="button" href="/edit_profile/{{ current_user.id }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-bounding-box" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-person-bounding-box" viewBox="0 0 16 16">
                                         <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"/>
                                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                                     </svg>
                                     Редактировать профиль
                                 </a></li>
                                 <li><a class="dropdown-item" type="button" href="/to_cart">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-journal-text" viewBox="0 0 16 16">
                                         <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
                                         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
                                         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
@@ -78,36 +91,40 @@
                                     Моя корзина
                                 </a></li>
                                 <li><a class="dropdown-item" type="button" href="/user_orders">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-journal-text" viewBox="0 0 16 16">
                                         <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
                                         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
                                         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
                                     </svg>
                                     Мои заказы
                                 </a></li>
-                                <li><a class="btn btn-outline-warning header-btn dropdown-item" type="button" href="/logout">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply-fill" viewBox="0 0 16 16">
+                                <li><a class="btn btn-outline-warning header-btn dropdown-item" type="button"
+                                       href="/logout">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-reply-fill" viewBox="0 0 16 16">
                                         <path d="M5.921 11.9L1.353 8.62a.719.719 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"/>
                                     </svg>
                                     Выйти из аккаунта
                                 </a></li>
                             </ul>
-                        </div></div>
-                        {% else %}
-                        <div>
-                            <a class="btn btn-outline-info" href="/register">Регистрация</a>
-                            <a class="btn btn-outline-warning" href="/login">Войти</a>
                         </div>
-                        {% endif %}
-                    </form>
-                </div>
+                    </div>
+                    {% else %}
+                    <div>
+                        <a class="btn btn-outline-info" href="/register">Регистрация</a>
+                        <a class="btn btn-outline-warning" href="/login">Войти</a>
+                    </div>
+                    {% endif %}
+                </form>
             </div>
-        </nav>
-    </header>
-    <!-- Begin page content -->
-    <main role="main" class="container">
-        {% block content %}{% endblock %}
-    </main>
-    <!-- Bottom page content -->
+        </div>
+    </nav>
+</header>
+<!-- Begin page content -->
+<main role="main">
+    {% block content %}{% endblock %}
+</main>
+<!-- Bottom page content -->
 </body>
 </html>

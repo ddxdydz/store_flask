@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="margin: 10%;margin-top: 1%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px;">
+<div style="margin: auto;margin-top: 1%;padding: 20px;font-size: 14px;background-color: #fff;border: 1px solid #e0e0e0;border-radius: 6px 6px 6px 6px; max-width: 800px">
     <h2 style="text-align: center;">Изменение отзыва</h2>
     <form action="" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
@@ -10,33 +10,35 @@
                 <h5>{{ form.score.label }}</h5>
                 {{ form.score(class="form-control") }}<br>
                 {% for error in form.score.errors %}
-                    <p class="alert alert-danger" role="alert">
-                        {{ error }}
-                    </p>
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
                 {% endfor %}
             </li>
             <li class="list-group-item">
                 <h5>{{ form.about.label }}</h5>
                 {{ form.about(class="form-control") }}<br>
                 {% for error in form.about.errors %}
-                    <p class="alert alert-danger" role="alert">
-                        {{ error }}
-                    </p>
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
                 {% endfor %}
             </li>
             <li class="list-group-item">
                 <h5>{{ form.profile_img.label }}</h5>
                 {{ form.profile_img(class="form-control") }}<br>
                 {% for error in form.profile_img.errors %}
-                    <p class="alert alert-danger" role="alert">
-                        {{ error }}
-                    </p>
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
                 {% endfor %}
                 <p>{{ form.delete_img() }} {{ form.delete_img.label }}</p>
             </li>
         </ul>
-        <p>{{ form.submit(type="submit", class="btn btn-primary", style="width: 49.5%; margin-top: 1.5%; float: left;") }}
-        <a class="btn btn-outline-success" href="/product/{{ review.product_id }}" style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary", style="width: 49.5%; margin-top: 1.5%; float: left;")
+            }}
+            <a class="btn btn-outline-success" href="/product/{{ review.product_id }}"
+               style="width: 49.5%; margin-top: 1.5%; margin-left: 1%;">Отмена</a></p>
         {{message}}
     </form>
 </div>
