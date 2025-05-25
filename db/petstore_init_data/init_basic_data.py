@@ -16,40 +16,35 @@ CATEGORIES = (
 )
 
 
-def init_basic_data():  # launch at main1.py by import
+def init_roles():
     session = db_session.create_session()
     for role in session.query(Role).all():
         session.delete(role)
+    session.commit()
     for role_name in ROLES:
         role = Role()
         role.role = role_name
         session.add(role)
+    session.commit()
 
+
+def init_categories():
+    session = db_session.create_session()
     for category in session.query(Category).all():
         session.delete(category)
+    session.commit()
     for category_name in CATEGORIES:
         category = Category()
         category.name = category_name
         session.add(category)
+    session.commit()
 
-    for product in session.query(Product).all():
-        session.delete(product)
-    for product_entry in PRODUCTS:
-        product = Product()
-        product.user_id = product_entry[0]
-        product.category_id = product_entry[1]
-        product.name = product_entry[2]
-        if product_entry[3]:
-            product.profile_img_path = product_entry[3]
-        product.short_description = product_entry[4]
-        product.long_description = product_entry[5]
-        product.specifications = product_entry[6]
-        product.promo = product_entry[7]
-        product.price = product_entry[8]
-        session.add(product)
 
+def init_users():
+    session = db_session.create_session()
     for user in session.query(User).all():
         session.delete(user)
+    session.commit()
     for user_data in USERS:
         user = User()
         user.name, user.email, _, user.role_id, user.balance, _, _ = user_data
@@ -60,3 +55,31 @@ def init_basic_data():  # launch at main1.py by import
             user.profile_img_path = user_data[-1]
         session.add(user)
     session.commit()
+
+
+def init_products():
+    session = db_session.create_session()
+    from db.petstore_init_data.products_data import PRODUCTS
+    for product in session.query(Product).all():
+        session.delete(product)
+    session.commit()
+    for product_entry in PRODUCTS:
+        product = Product()
+        product.user_id = product_entry[0]
+        product.category_id = product_entry[1]
+        product.name = product_entry[2]
+        product.profile_img_path = product_entry[3]
+        product.short_description = product_entry[4]
+        product.long_description = product_entry[5]
+        product.specifications = product_entry[6]
+        product.promo = product_entry[7]
+        product.price = product_entry[8]
+        session.add(product)
+    session.commit()
+
+
+def init_basic_data():  # launch at main1.py by import
+    init_roles()
+    init_users()
+    init_categories()
+    init_products()
