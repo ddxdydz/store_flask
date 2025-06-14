@@ -150,18 +150,18 @@
         </div>
 
         {% if total_pages != 1 %}
-        <div class="pagination justify-content-center mt-4">
+        <div class="pagination justify-content-center mt-4" id="pagination">
             {% if current_page > 1 %}
-            <a class="btn btn-outline-dark" href="?page={{ current_page - 1 }}">Назад</a>
+            <a class="btn btn-outline-dark" href="?page={{ current_page - 1 }}#pagination">Назад</a>
             {% endif %}
 
             {% for page in range(1, total_pages + 1) %}
-            <a class="btn btn-outline-dark mx-1 {% if page == current_page %}active{% endif %}" href="?page={{ page }}">{{
+            <a class="btn btn-outline-dark mx-1 {% if page == current_page %}active{% endif %}" href="?page={{ page }}#pagination">{{
                 page }}</a>
             {% endfor %}
 
             {% if current_page < total_pages %}
-            <a class="btn btn-outline-dark" href="?page={{ current_page + 1 }}">Вперед</a>
+            <a class="btn btn-outline-dark" href="?page={{ current_page + 1 }}#pagination">Вперед</a>
             {% endif %}
         </div>
         {% endif %}
@@ -169,7 +169,7 @@
 </section>
 
 <!-- Футер -->
-<footer class="py-5">
+<footer class="py-5" id="footer">
     <div class="container">
         <p class="m-0 text-center text-white">Интернет-магазин зоотоваров</p>
     </div>

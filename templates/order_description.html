@@ -9,6 +9,9 @@
         {% else %}
         <p>Описание отсутствует.</p>
         {% endfor %}
+        {% if order_text %}
+        <p>Статус заказа: В процессе обработки</p>
+        {% endif %}
     </div>
     <a class="btn btn-outline-success" href="/user_orders"
        style="width: 100%; margin-top: 1.5%; margin-left: 1%;">Назад</a></p>

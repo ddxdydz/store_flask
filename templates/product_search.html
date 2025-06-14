@@ -64,7 +64,7 @@
                 </div>
             </div>
             {% if total_pages != 1 %}
-            <div class="pagination justify-content-center mt-4">
+            <div class="pagination justify-content-center mt-4" id="pagination">
                 {% set base_url = request.path %}
                 {% set query_params = [] %}
                 {% if current_search_query %}
@@ -79,18 +79,18 @@
 
                 {% if current_page > 1 %}
                 <a class="btn btn-outline-dark"
-                   href="{{ base_url }}?page={{ current_page - 1 }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}">Назад</a>
+                   href="{{ base_url }}?page={{ current_page - 1 }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}#pagination">Назад</a>
                 {% endif %}
 
                 {% for page in range(1, total_pages + 1) %}
                 <a class="btn btn-outline-dark mx-1 {% if page == current_page %}active{% endif %}"
-                   href="{{ base_url }}?page={{ page }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}">{{
+                   href="{{ base_url }}?page={{ page }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}#pagination">{{
                     page }}</a>
                 {% endfor %}
 
                 {% if current_page < total_pages %}
                 <a class="btn btn-outline-dark"
-                   href="{{ base_url }}?page={{ current_page + 1 }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}">Вперед</a>
+                   href="{{ base_url }}?page={{ current_page + 1 }}{% if existing_params_str %}&{{ existing_params_str }}{% endif %}#pagination">Вперед</a>
                 {% endif %}
             </div>
             {% endif %}
